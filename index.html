@@ -1,4 +1,4 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="am">
 <head>
     <meta charset="UTF-8">
@@ -6,54 +6,52 @@ DOCTYPE html>
     <title>Ethio Mega Earn - Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --primary: #1e3c72; --secondary: #2a5298; --success: #28a745; --warning: #f39c12; --danger: #e74c3c; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 0; padding-bottom: 70px; }
-        .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 30px 20px; text-align: center; border-radius: 0 0 25px 25px; }
-        .balance-card { background: white; color: var(--primary); padding: 15px; border-radius: 15px; margin: -25px 20px 20px; display: block; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); font-size: 1.5em; font-weight: bold; }
+        :root { --primary: #1e3c72; --secondary: #2a5298; --success: #28a745; --danger: #e74c3c; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 70px; }
+        .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 25px; text-align: center; border-radius: 0 0 20px 20px; }
+        .balance-card { background: white; color: var(--primary); padding: 15px; border-radius: 15px; margin: -20px 20px 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 1.5em; font-weight: bold; }
         .page { display: none; padding: 15px; }
         .page.active { display: block; }
         .card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border-left: 5px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .reward { color: var(--success); font-weight: bold; }
-        .btn { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 0.8em; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); border-top: 1px solid #ddd; }
-        .nav-item { border: none; background: none; color: #666; font-size: 0.9em; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        .nav-item { border: none; background: none; color: #666; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.9em; }
         .nav-item.active { color: var(--primary); font-weight: bold; }
-        .profile-box { background: white; padding: 20px; border-radius: 15px; text-align: center; }
+        #withdraw-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; }
+        .modal-content { background: white; margin: 15% auto; padding: 20px; width: 85%; border-radius: 15px; }
+        input { width: 93%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
     </style>
 </head>
 <body>
 
 <div id="home" class="page active">
-    <div class="header">
-        <h2>Ethio Mega Earn</h2>
-        <p>እንኳን ደህና መጡ!</p>
-    </div>
+    <div class="header"><h2>Ethio Mega Earn</h2></div>
     <div class="balance-card">💰 <span id="main-bal">15.00</span> ETB</div>
-    <div style="padding: 10px; text-align: center;">
-        <p>ዛሬ 15 አዳዲስ ስራዎች ይጠብቁዎታል።</p>
-        <button class="btn" style="width: 100%; padding: 15px; background: var(--success);" onclick="showPage('tasks')">ስራዎችን ጀምር</button>
-    </div>
+    <button class="btn" style="width: 90%; margin: 20px; padding: 15px;" onclick="showPage('tasks', document.querySelectorAll('.nav-item')[1])">ስራዎችን ጀምር</button>
 </div>
 
 <div id="tasks" class="page">
-    <h3 style="color: var(--primary);">ስራዎች (Tasks)</h3>
-    <div id="task-container">
-        </div>
+    <h3 style="color: var(--primary);">የገቢ ስራዎች</h3>
+    <div id="task-list"></div>
 </div>
 
 <div id="profile" class="page">
-    <h3 style="color: var(--primary);">የእኔ ፕሮፋይል</h3>
-    <div class="profile-box">
-        <div style="font-size: 4em;">👤</div>
-        <h4>የተጠቃሚ ስም: <span id="user-name">በእንግዳ</span></h4>
-        <p>መለያ ቁጥር: #<span id="user-id">88492</span></p>
-        <hr>
-        <div style="text-align: left;">
-            <p>ጠቅላላ የጋበዟቸው: 0</p>
-            <p>ያወጡት ብር: 0.00 ETB</p>
-            <p>ዝቅተኛ የማውጫ መጠን: 150.00 ETB</p>
-        </div>
-        <button class="btn" style="background: var(--danger); width: 100%;" onclick="alert('ሂሳብዎ ገና ነው')">ገንዘብ አውጣ</button>
+    <div class="header"><h4>የእኔ ፕሮፋይል</h4><p id="user-display">Leo</p></div>
+    <div class="card" style="display: block; margin-top: 20px; text-align: center;">
+        <p>ዝቅተኛ የማውጫ መጠን: 150.00 ETB</p>
+        <button class="btn" style="width: 100%; background: var(--success); padding: 15px;" onclick="openWithdraw()">💸 ብር አውጣ (Withdraw)</button>
+    </div>
+</div>
+
+<div id="withdraw-modal">
+    <div class="modal-content">
+        <h4>የባንክ መረጃ ያስገቡ</h4>
+        <input type="text" id="bank-name" placeholder="የባንክ ስም">
+        <input type="number" id="acc-num" placeholder="የአካውንት ቁጥር">
+        <input type="text" id="acc-holder" placeholder="የአካውንቱ ባለቤት ስም">
+        <button class="btn" style="width: 100%; background: var(--success);" onclick="submitWithdraw()">መረጃውን ላክ</button>
+        <button class="btn" style="width: 100%; background: var(--danger); margin-top: 5px;" onclick="closeWithdraw()">ተመለስ</button>
     </div>
 </div>
 
@@ -66,33 +64,50 @@ DOCTYPE html>
 <script>
     let tg = window.Telegram.WebApp;
     tg.expand();
-    if(tg.initDataUnsafe.user) {
-        document.getElementById('user-name').innerText = tg.initDataUnsafe.user.first_name;
-        document.getElementById('user-id').innerText = tg.initDataUnsafe.user.id;
+    let balance = 15.0;
+
+    function addMoney(amt) {
+        balance += amt;
+        document.getElementById('main-bal').innerText = balance.toFixed(2);
+        alert(amt + " ብር ተጨምሯል!");
     }
 
     function showPage(pageId, btn) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-        if(btn) btn.classList.add('active');
+        btn.classList.add('active');
     }
 
-    const tasks = [
-        { t: "ዕለታዊ ስጦታ", r: 1 }, { t: "ጓደኛ መጋበዝ", r: 10 }, { t: "ቪዲዮ መፖሰት", r: 20 },
-        { t: "ዩቲዩብ ማየት", r: 3 }, { t: "ቻናል መቀላቀል", r: 5 }, { t: "አፕ መጫን", r: 15 },
-        { t: "ጥያቄ መመለስ", r: 4 }, { t: "ቲክቶክ መከተል", r: 2 }, { t: "ፌስቡክ ላይክ", r: 1.5 },
-        { t: "ቴሌግራም ቦት መጀመር", r: 3 }, { t: "አጭር ሊንክ መክፈት", r: 2.5 }, { t: "ኢንስታግራም መከተል", r: 2 },
-        { t: "ዌብሳይት መጎብኘት", r: 1 }, { t: "አፕ ደረጃ መስጠት", r: 5 }, { t: "ቪዲዮ ላይክ ማድረግ", r: 2 }
-    ];
+    function openWithdraw() {
+        if(balance < 150) alert("150 ብር መሙላት አለብዎት!");
+        else document.getElementById('withdraw-modal').style.display = 'block';
+    }
 
-    const container = document.getElementById('task-container');
-    tasks.forEach(task => {
-        container.innerHTML += `
-            <div class="card">
-                <div><h4>${task.t}</h4><div class="reward">+${task.r}.00 ETB</div></div>
-                <button class="btn" onclick="alert('${task.t} ስራ ተጀምሯል...')">ስራ</button>
-            </div>`;
+    function closeWithdraw() { document.getElementById('withdraw-modal').style.display = 'none'; }
+
+    function submitWithdraw() {
+        const bank = document.getElementById('bank-name').value;
+        const acc = document.getElementById('acc-num').value;
+        const name = document.getElementById('acc-holder').value;
+        
+        // ያንተ Bot Token እና Chat ID
+        const botToken = "8638798872:AAGaKoLv9VSRRK3nI7UPx8iJc6byQ5L3tBc";
+        const chatId = "7821771120"; 
+
+        if(bank && acc && name) {
+            const message = `🚨 አዲስ ክፍያ ጥያቄ!\n👤 ስም: ${name}\n🏦 ባንክ: ${bank}\n🔢 አካውንት: ${acc}\n💰 መጠን: ${balance} ETB`;
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+            
+            fetch(url).then(res => {
+                if(res.ok) { alert("መረጃው ተልኳል!"); closeWithdraw(); }
+            });
+        } else { alert("ሁሉንም መረጃ ይሙሉ!"); }
+    }
+
+    const tasks = ["ዩቲዩብ ማየት", "ቴሌግራም መቀላቀል", "አፕ መጫን"];
+    tasks.forEach(t => {
+        document.getElementById('task-list').innerHTML += `<div class="card"><div><h4>${t}</h4><div class="reward">+10.00 ETB</div></div><button class="btn" onclick="addMoney(10)">ስራ</button></div>`;
     });
 </script>
 </body>
