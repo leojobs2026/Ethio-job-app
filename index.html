@@ -151,7 +151,19 @@
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
         .nav-item { border: none; background: none; color: #95a5a6; display: flex; flex-direction: column; align-items: center; flex: 1; font-size: 0.8em; }
         .nav-item.active { color: var(--primary); font-weight: bold; }
-        input, select { width: 92%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; }
+            function startTask(url, amt, btn) {
+        window.open(url, "_blank");
+        btn.innerText = "ቪዲዮውን በማረጋገጥ ላይ (30s)..."; // ሰዓቱን ጨምረናል
+        btn.disabled = true; // እንዳይደጋግመው መጀመሪያውኑ ይዘጋል
+        
+        setTimeout(() => {
+            balance += amt;
+            document.getElementById('main-bal').innerText = balance.toFixed(2);
+            btn.innerText = "ተጠናቀቀ ✔️";
+            btn.style.background = "#ccc";
+        }, 30000); // 30 ሰከንድ እንዲቆይ ተደርጓል
+    }
+
     </style>
 </head>
 <body>
