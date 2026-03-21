@@ -3,157 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethio Job Premium v10</title>
+    <title>Ethio Job Finder v12 - Professional</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-6423416979717513" crossorigin="anonymous"></script>
     <style>
+        .done-task { opacity: 0.5; pointer-events: none; background: #1a2233 !important; border-color: #2d3748 !important; }
         .active-nav { color: #22c55e !important; background: rgba(34, 197, 94, 0.1); border-radius: 12px; }
-        .page { display: none; }
-        .page-active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body class="bg-[#0b0f1a] text-white font-sans">
 
-    <div id="loginSection" class="flex flex-col items-center justify-center min-h-screen p-6">
+    <div id="loginPage" class="flex flex-col items-center justify-center min-h-screen p-6">
         <div class="w-full max-w-sm bg-[#161e2d] p-10 rounded-[2.5rem] border border-slate-700 text-center shadow-2xl">
-            <div class="w-20 h-20 bg-green-500 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-lg">
-                <i class="fas fa-shield-alt text-3xl text-white"></i>
-            </div>
-            <h2 class="text-2xl font-black mb-2 italic">ETHIO JOB LOGIN</h2>
-            <p class="text-gray-400 text-sm mb-8">Enter your phone to secure account</p>
-            <input id="phoneInput" type="tel" placeholder="09 / 07..." class="w-full p-4 rounded-2xl bg-[#0b0f1a] border border-slate-700 mb-4 text-center outline-none focus:border-green-500 text-green-500 font-bold">
-            <button onclick="handleLogin()" class="w-full bg-green-600 py-4 rounded-2xl font-black shadow-lg active:scale-95 transition-all">START EARNING</button>
-            <p class="text-[10px] text-gray-500 mt-6 uppercase tracking-widest">Admin: Leohafru1</p>
+            <h2 class="text-2xl font-black mb-6 italic text-green-500">ETHIO JOB LOGIN</h2>
+            <input id="userPhone" type="tel" placeholder="Phone Number (09...)" class="w-full p-4 rounded-2xl bg-[#0b0f1a] border border-slate-700 mb-4 text-center outline-none">
+            <button onclick="login()" class="w-full bg-green-600 py-4 rounded-2xl font-black shadow-lg hover:bg-green-500">GET STARTED</button>
         </div>
     </div>
 
-    <div id="mainSection" class="hidden max-w-md mx-auto min-h-screen pb-32">
-        <div class="bg-[#161e2d]/90 backdrop-blur-md sticky top-0 z-50 p-6 border-b border-slate-800 flex justify-between items-center">
+    <div id="mainApp" class="hidden max-w-md mx-auto min-h-screen pb-32">
+        <div class="bg-[#161e2d] p-6 border-b border-slate-800 flex justify-between items-center sticky top-0 z-50">
             <div>
-                <p id="userLabel" class="text-[10px] text-green-500 font-bold uppercase tracking-widest"></p>
-                <h1 id="balanceDisplay" class="text-4xl font-black tracking-tighter">$0.000</h1>
+                <p id="idLabel" class="text-[10px] text-green-500 font-bold uppercase"></p>
+                <h1 id="balDisplay" class="text-4xl font-black text-white">$0.000</h1>
             </div>
-            <a href="https://t.me/Leohafru1" target="_blank" class="w-12 h-12 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center border border-blue-500/20">
+            <a href="https://t.me/Leohafru1" class="w-12 h-12 bg-blue-500/10 text-blue-500 rounded-xl flex items-center justify-center border border-blue-500/20 shadow-lg">
                 <i class="fas fa-paper-plane"></i>
             </a>
         </div>
 
-        <div id="homePage" class="page px-5 py-6 space-y-4">
-            <div class="bg-gradient-to-br from-green-600 to-emerald-800 p-8 rounded-[2rem] shadow-xl text-center">
-                <h3 class="text-xl font-black mb-2 italic">Official Support</h3>
-                <p class="text-xs text-white/80 mb-6">Any payment questions? Contact Leohafru1.</p>
-                <a href="https://t.me/Leohafru1" class="bg-white text-green-700 px-10 py-3 rounded-2xl font-black text-xs inline-block">TELEGRAM ADMIN</a>
-            </div>
-            <div class="bg-[#161e2d] p-6 rounded-2xl border border-slate-800 flex justify-between items-center">
-                <div><p class="text-[10px] text-gray-400">Total Referrals</p><p class="text-xl font-bold">0 Users</p></div>
-                <i class="fas fa-users text-blue-500 text-2xl"></i>
-            </div>
-        </div>
+        <div id="content" class="p-5 space-y-4"></div>
 
-        <div id="taskPage" class="page px-5 py-6 space-y-3">
-            <h2 class="text-lg font-black text-green-500 mb-4 px-2 tracking-widest uppercase">Earning Tasks (18)</h2>
-            <div id="taskListContainer" class="space-y-3"></div>
-        </div>
-
-        <div id="walletPage" class="page px-5 py-6">
-            <div class="bg-[#161e2d] p-8 rounded-[2.5rem] border border-slate-800">
-                <h3 class="text-xl font-black mb-6">Withdraw Money</h3>
-                <div class="space-y-3">
-                    <div class="flex items-center gap-3 bg-[#0b0f1a] p-4 rounded-xl border border-slate-800"><i class="fas fa-mobile-alt text-green-500"></i><span class="text-sm">Telebirr</span></div>
-                    <div class="flex items-center gap-3 bg-[#0b0f1a] p-4 rounded-xl border border-slate-800"><i class="fas fa-university text-blue-400"></i><span class="text-sm">CBE / Bank</span></div>
-                    <div class="flex items-center gap-3 bg-[#0b0f1a] p-4 rounded-xl border border-slate-800"><i class="fas fa-building text-yellow-500"></i><span class="text-sm">Abyssinia</span></div>
-                </div>
-                <input type="text" placeholder="Account Details" class="w-full p-4 rounded-xl bg-[#0b0f1a] border border-slate-700 mt-6 outline-none">
-                <button onclick="alert('Min withdraw $0.50')" class="w-full bg-green-600 py-4 rounded-2xl font-black mt-4 shadow-lg shadow-green-900/20">WITHDRAW</button>
-            </div>
-        </div>
-
-        <nav class="fixed bottom-4 left-4 right-4 max-w-md mx-auto bg-[#161e2d] border border-slate-800 flex justify-around py-3 rounded-[2rem] shadow-2xl z-50">
-            <button onclick="showPage('home', this)" class="nav-btn active-nav flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-home text-lg"></i><span class="text-[9px] font-bold">Home</span></button>
-            <button onclick="showPage('task', this)" class="nav-btn flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-bolt text-lg"></i><span class="text-[9px] font-bold">Earn</span></button>
-            <button onclick="showPage('wallet', this)" class="nav-btn flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-wallet text-lg"></i><span class="text-[9px] font-bold">Wallet</span></button>
+        <nav class="fixed bottom-4 left-4 right-4 bg-[#161e2d] border border-slate-800 flex justify-around py-3 rounded-[2rem] shadow-2xl">
+            <button onclick="nav('home', this)" class="nav-btn flex flex-col items-center text-gray-500"><i class="fas fa-home"></i><span class="text-[9px] font-bold">Home</span></button>
+            <button onclick="nav('task', this)" class="nav-btn flex flex-col items-center text-gray-500"><i class="fas fa-bolt"></i><span class="text-[9px] font-bold">Tasks</span></button>
+            <button onclick="nav('wallet', this)" class="nav-btn flex flex-col items-center text-gray-500"><i class="fas fa-wallet"></i><span class="text-[9px] font-bold">Wallet</span></button>
         </nav>
     </div>
 
     <script>
-        let balance = parseFloat(localStorage.getItem('ethio_v10_bal')) || 0.00;
-        let userPhone = localStorage.getItem('ethio_user_phone');
+        let balance = parseFloat(localStorage.getItem('user_bal')) || 0.00;
+        let phone = localStorage.getItem('user_id');
+        let completedTasks = JSON.parse(localStorage.getItem('tasks_done')) || {};
 
-        // Check login status
-        if(userPhone) {
-            startApp();
+        if(phone) showApp();
+
+        function login() {
+            let p = document.getElementById('userPhone').value;
+            if(p.length >= 10) { localStorage.setItem('user_id', p); phone = p; showApp(); }
+            else { alert("Enter valid phone!"); }
         }
 
-        function handleLogin() {
-            const phone = document.getElementById('phoneInput').value;
-            if(phone.length >= 10) {
-                localStorage.setItem('ethio_user_phone', phone);
-                userPhone = phone;
-                startApp();
-            } else { alert("Please enter a correct phone number!"); }
-        }
-
-        function startApp() {
-            document.getElementById('loginSection').classList.add('hidden');
-            document.getElementById('mainSection').classList.remove('hidden');
-            document.getElementById('userLabel').innerText = "ID: " + userPhone;
-            showPage('home', document.querySelector('.nav-btn'));
-            loadTasks();
+        function showApp() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('idLabel').innerText = "ID: " + phone;
+            nav('task', document.querySelectorAll('.nav-btn')[1]);
             updateUI();
         }
 
-        function showPage(pageId, btn) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('page-active'));
-            document.getElementById(pageId + 'Page').classList.add('page-active');
+        function nav(page, btn) {
+            let c = document.getElementById('content');
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
             if(btn) btn.classList.add('active-nav');
-        }
 
-        function loadTasks() {
-            const container = document.getElementById('taskListContainer');
-            const tasks = [
-                {n: "Watch Video Ad", p: 0.008, i: "play-circle"},
-                {n: "Subscribe Channel", p: 0.005, i: "youtube"},
-                {n: "TikTok Like", p: 0.004, i: "tiktok"},
-                {n: "Follow Telegram", p: 0.006, i: "paper-plane"},
-                {n: "Watch Video Ad", p: 0.008, i: "play-circle"},
-                {n: "Instagram Follow", p: 0.003, i: "instagram"},
-                {n: "Twitter Post Like", p: 0.003, i: "twitter"},
-                {n: "Watch Video Ad", p: 0.008, i: "play-circle"},
-                {n: "Website Visit", p: 0.002, i: "globe"},
-                {n: "Install New App", p: 0.015, i: "download"},
-                {n: "Watch Video Ad", p: 0.008, i: "play-circle"},
-                {n: "Premium Survey", p: 0.020, i: "poll-h"},
-                {n: "Join Channel", p: 0.005, i: "users"},
-                {n: "Watch Video Ad", p: 0.008, i: "play-circle"},
-                {n: "App Review", p: 0.012, i: "star"},
-                {n: "Facebook Share", p: 0.004, i: "facebook"},
-                {n: "Watch Video Ad", p: 0.008, i: "play-circle"},
-                {n: "Daily Gift", p: 0.010, i: "gift"}
-            ];
-            
-            container.innerHTML = tasks.map((t, idx) => `
-                <div onclick="doTask(${t.p})" class="bg-[#161e2d] p-4 rounded-2xl flex justify-between items-center border border-slate-800 active:scale-95 transition-all cursor-pointer">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 bg-[#0b0f1a] rounded-xl flex items-center justify-center text-green-500 shadow-inner"><i class="fas fa-${t.i}"></i></div>
-                        <div><p class="font-bold text-sm">Task #${idx+1}: ${t.n}</p><p class="text-[10px] text-green-500 font-mono">Reward: $${t.p}</p></div>
+            if(page === 'home') {
+                c.innerHTML = `
+                <div class="bg-gradient-to-r from-green-600 to-teal-700 p-8 rounded-3xl text-center shadow-xl">
+                    <h3 class="font-black text-xl mb-2 italic">Support Center</h3>
+                    <p class="text-xs mb-6 opacity-80">Payment issues? Message Leohafru1 now.</p>
+                    <a href="https://t.me/Leohafru1" class="bg-white text-green-700 px-8 py-3 rounded-2xl font-black text-xs inline-block shadow-lg">CONTACT ADMIN</a>
+                </div>`;
+            } else if(page === 'task') {
+                let taskData = [
+                    {n: "Watch Video Ad #1", p: 0.008, i: "play"}, {n: "Play Mini Game #1", p: 0.005, i: "gamepad"},
+                    {n: "Watch Video Ad #2", p: 0.008, i: "play"}, {n: "Subscribe Channel", p: 0.006, i: "youtube"},
+                    {n: "Watch Video Ad #3", p: 0.008, i: "play"}, {n: "Follow Instagram", p: 0.004, i: "instagram"},
+                    {n: "Watch Video Ad #4", p: 0.008, i: "play"}, {n: "Join Telegram", p: 0.005, i: "paper-plane"},
+                    {n: "Watch Video Ad #5", p: 0.008, i: "play"}, {n: "TikTok Like", p: 0.004, i: "tiktok"},
+                    {n: "Watch Video Ad #6", p: 0.008, i: "play"}, {n: "Play Mini Game #2", p: 0.005, i: "gamepad"},
+                    {n: "Watch Video Ad #7", p: 0.008, i: "play"}, {n: "Twitter Follow", p: 0.004, i: "twitter"},
+                    {n: "Watch Video Ad #8", p: 0.008, i: "play"}, {n: "Install New App", p: 0.015, i: "download"},
+                    {n: "Watch Video Ad #9", p: 0.008, i: "play"}, {n: "Daily Bonus", p: 0.010, i: "gift"}
+                ];
+                let html = '<h2 class="text-lg font-black text-green-500 mb-4 px-2 tracking-widest uppercase">Earning Tasks (18)</h2>';
+                taskData.forEach((t, index) => {
+                    let taskId = 'task_' + index;
+                    let isDone = isTaskCompleted(taskId);
+                    html += `
+                    <div onclick="doTask('${taskId}', ${t.p})" class="bg-[#161e2d] p-4 rounded-2xl flex justify-between items-center border border-slate-800 active:scale-95 transition-all cursor-pointer ${isDone ? 'done-task' : ''}">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-[#0b0f1a] rounded-xl flex items-center justify-center text-green-500 shadow-inner"><i class="fas fa-${t.i}"></i></div>
+                            <div><p class="font-bold text-sm">${t.n}</p><p class="text-[10px] text-green-500">${isDone ? 'Wait 24h' : 'Reward: $'+t.p}</p></div>
+                        </div>
+                        <i class="fas ${isDone ? 'fa-check-circle text-green-500' : 'fa-play text-gray-700'}"></i>
+                    </div>`;
+                });
+                c.innerHTML = html;
+            } else if(page === 'wallet') {
+                c.innerHTML = `
+                <div class="bg-[#161e2d] p-8 rounded-[2.5rem] border border-slate-800">
+                    <h3 class="text-xl font-black mb-6">Withdraw Money</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3 bg-[#0b0f1a] p-4 rounded-xl border border-slate-800"><i class="fas fa-mobile-alt text-green-500"></i><span class="text-sm font-bold">Telebirr / Mobile</span></div>
+                        <div class="flex items-center gap-3 bg-[#0b0f1a] p-4 rounded-xl border border-slate-800"><i class="fas fa-university text-blue-400"></i><span class="text-sm font-bold">CBE / Bank</span></div>
                     </div>
-                    <i class="fas fa-chevron-right text-gray-700"></i>
-                </div>
-            `).join('');
+                    <input id="accNo" type="text" placeholder="Account Details (09...)" class="w-full p-4 rounded-xl bg-[#0b0f1a] border border-slate-700 mt-6 outline-none text-green-500 font-bold">
+                    <button onclick="withdrawRequest()" class="w-full bg-green-600 py-4 rounded-2xl font-black mt-4 shadow-lg shadow-green-900/20">WITHDRAW NOW</button>
+                </div>`;
+            }
         }
 
-        function doTask(amount) {
-            alert("Processing Task... Reward: $" + amount);
+        function isTaskCompleted(id) {
+            if (!completedTasks[id]) return false;
+            let lastTime = completedTasks[id];
+            let now = new Date().getTime();
+            return (now - lastTime) < (24 * 60 * 60 * 1000); // 24 ሰዓት ካላለፈ 'Done' ነው
+        }
+
+        function doTask(id, amount) {
+            alert("Loading Task... Please wait 30 seconds to earn $" + amount);
             balance += amount;
+            completedTasks[id] = new Date().getTime();
+            localStorage.setItem('tasks_done', JSON.stringify(completedTasks));
             updateUI();
+            nav('task'); // Refresh list
+        }
+
+        function withdrawRequest() {
+            let acc = document.getElementById('accNo').value;
+            if(balance < 0.50) { alert("ዝቅተኛው የክፍያ መጠን $0.50 ነው።"); return; }
+            if(acc.length < 10) { alert("እባክዎ ትክክለኛ የባንክ ወይም የቴሌብር ቁጥር ያስገቡ!"); return; }
+            
+            let msg = `የክፍያ ጥያቄ ከ: ${phone}%0Aአካውንት: ${acc}%0Aመጠን: $${balance.toFixed(3)}`;
+            window.location.href = `https://t.me/Leohafru1?text=${msg}`;
+            balance = 0; updateUI();
         }
 
         function updateUI() {
-            document.getElementById('balanceDisplay').innerText = `$${balance.toFixed(3)}`;
-            localStorage.setItem('ethio_v10_bal', balance);
+            document.getElementById('balDisplay').innerText = "$" + balance.toFixed(3);
+            localStorage.setItem('user_bal', balance);
         }
     </script>
 </body>
