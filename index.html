@@ -7,100 +7,86 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-[#0f172a] text-white font-sans overflow-x-hidden">
+<body class="bg-[#0f172a] text-white font-sans">
 
-    <div id="loginPage" class="flex flex-col items-center justify-center min-h-screen p-6">
-        <div class="bg-[#1e293b] p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-700 text-center">
-            <h1 class="text-3xl font-bold mb-2 text-green-500 underline">ETHIO JOB PRO $</h1>
-            <p class="text-gray-400 mb-6 font-bold">እንኳን ደህና መጡ!</p>
-            <input id="userPhone" type="text" placeholder="ስልክ ወይም ኢሜል" class="w-full p-4 mb-4 rounded-xl bg-gray-900 border border-gray-700 focus:border-green-500 outline-none">
-            <input id="userPass" type="password" placeholder="የይለፍ ቃል" class="w-full p-4 mb-6 rounded-xl bg-gray-900 border border-gray-700 focus:border-green-500 outline-none">
-            <button onclick="handleLogin()" class="w-full bg-green-600 hover:bg-green-700 p-4 rounded-xl font-bold text-xl transition">ግባ / Login</button>
-        </div>
-    </div>
-
-    <div id="mainApp" class="hidden">
-        <div class="bg-white m-4 p-8 rounded-3xl text-center shadow-2xl">
-            <p class="text-gray-500 font-medium">የእርስዎ የዶላር ገቢ</p>
-            <h1 id="balanceDisplay" class="text-5xl font-black text-green-600">$0.00</h1>
+    <div id="mainApp">
+        <div class="bg-white m-4 p-8 rounded-3xl text-center shadow-xl">
+            <p class="text-gray-500 font-bold">ያጠራቀሙት ብር</p>
+            <h1 id="balance" class="text-6xl font-black text-green-600">$0.00</h1>
         </div>
 
-        <div id="contentArea" class="px-6 pb-24"></div>
+        <div id="contentArea" class="px-6 pb-24">
+            </div>
 
-        <div class="fixed bottom-0 w-full bg-[#1e293b] border-t border-gray-700 flex justify-around p-4 text-gray-400">
-            <button onclick="navigate('home')" class="nav-btn text-green-500 flex flex-col items-center"><i class="fas fa-home mb-1"></i><span class="text-[10px]">Home</span></button>
-            <button onclick="navigate('withdraw')" class="nav-btn flex flex-col items-center"><i class="fas fa-wallet mb-1"></i><span class="text-[10px]">Withdraw</span></button>
-            <button onclick="navigate('profile')" class="nav-btn flex flex-col items-center"><i class="fas fa-user mb-1"></i><span class="text-[10px]">Profile</span></button>
+        <div class="fixed bottom-0 w-full bg-[#1e293b] border-t border-gray-700 flex justify-around p-4">
+            <button onclick="navigate('home')" class="flex flex-col items-center text-green-500"><i class="fas fa-home"></i><span class="text-xs">Home</span></button>
+            <button onclick="navigate('withdraw')" class="flex flex-col items-center"><i class="fas fa-wallet"></i><span class="text-xs">Withdraw</span></button>
+            <button onclick="navigate('profile')" class="flex flex-col items-center"><i class="fas fa-user"></i><span class="text-xs">Profile</span></button>
         </div>
     </div>
 
     <script>
-        // የቪዲዮ ስራዎች ዝርዝር (ከ 2 ደቂቃ በታች የሆኑ)
-        const tasks = [
-            { title: "ምርጥ የሙዚቃ ቪዲዮ", pay: "0.02", link: "https://www.youtube.com/shorts/3i9s1H2pYy4" },
-            { title: "አስቂኝ የቲክቶክ ቪዲዮ", pay: "0.02", link: "https://www.youtube.com/shorts/q7n65mZJd2A" },
-            { title: "አጭር የፊልም ትሬለር", pay: "0.03", link: "https://www.youtube.com/shorts/V9p0a8m9K0g" },
-            { title: "የቴክኖሎጂ መረጃ", pay: "0.02", link: "https://www.youtube.com/shorts/w8r9Uv7S2i5" }
-        ];
-
-        window.onload = function() {
-            if(localStorage.getItem('isLoggedIn')) showApp();
-        };
-
-        function handleLogin() {
-            const phone = document.getElementById('userPhone').value;
-            if(phone) {
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('userName', phone);
-                showApp();
-            } else { alert("እባክዎን ስልክ ቁጥር ወይም ኢሜል ያስገቡ!"); }
-        }
-
-        function showApp() {
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            navigate('home');
-        }
-
-        function renderTask(title, pay, link) {
-            return `<div class="bg-[#1e293b] p-4 rounded-2xl flex justify-between items-center border border-gray-700 mb-3">
-                        <div><p class="text-sm font-medium">${title}</p><p class="text-green-400 font-bold">+$${pay}</p></div>
-                        <button onclick="window.open('${link}')" class="bg-green-600 px-5 py-1 rounded-lg text-sm font-bold">ስራ</button>
-                    </div>`;
-        }
+        let currentBalance = 0.00;
 
         function navigate(page) {
             const content = document.getElementById('contentArea');
             if(page === 'home') {
-                content.innerHTML = `<h2 class="text-xl font-bold mb-4">የዛሬ ምርጥ ስራዎች</h2>` + 
-                tasks.map(t => renderTask(t.title, t.pay, t.link)).join('');
-            } else if(page === 'withdraw') {
-                content.innerHTML = `<h2 class="text-xl font-bold mb-4">ገንዘብ ማውጫ</h2>
-                    <div class="bg-[#1e293b] p-5 rounded-2xl border border-gray-700">
-                        <select onchange="updateBanks(this.value)" class="w-full p-4 mb-4 rounded-xl bg-gray-900 border border-gray-700">
-                            <option value="ET">ኢትዮጵያ (Ethiopia)</option>
-                            <option value="INT">ሌሎች ሀገራት (International)</option>
-                        </select>
-                        <select id="bankList" class="w-full p-4 mb-4 rounded-xl bg-gray-900 border border-gray-700"></select>
-                        <input type="text" placeholder="የአካውንት ቁጥር ወይም ኢሜል" class="w-full p-4 mb-4 rounded-xl bg-gray-900 border border-gray-700">
-                        <button class="w-full bg-green-600 p-4 rounded-xl font-bold">ክፍያ ይጠይቁ</button>
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold mb-4 mt-4">የዛሬ ስራዎች</h2>
+                    <div class="space-y-4">
+                        ${renderTask("አዲስ ሙዚቃ ይዩ", 0.02, "https://www.youtube.com/shorts/3i9s1H2pYy4")}
+                        ${renderTask("ቲክቶክ ቪዲዮ", 0.02, "https://www.youtube.com/shorts/q7n65mZJd2A")}
+                        <div class="bg-blue-900/40 p-5 rounded-2xl border border-blue-500 flex justify-between items-center">
+                            <div><p class="font-bold">ጓደኛ ጋብዙ</p><p class="text-blue-400">+$0.10</p></div>
+                            <button onclick="copyReferral()" class="bg-blue-600 px-4 py-2 rounded-lg text-sm">ኮድ ቅዳ</button>
+                        </div>
                     </div>`;
-                updateBanks('ET');
-            } else {
-                content.innerHTML = `<div class="text-center py-6">
-                    <h3 class="text-xl font-bold">${localStorage.getItem('userName')}</h3>
-                    <button onclick="logout()" class="mt-8 text-red-500 border border-red-500 px-6 py-2 rounded-xl">ውጣ (Logout)</button>
-                </div>`;
+            } else if(page === 'withdraw') {
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold mb-4 mt-4 text-green-500">ብር ማውጫ</h2>
+                    <div class="bg-[#1e293b] p-6 rounded-2xl border border-gray-700">
+                        <p class="text-sm text-red-400 mb-4 font-bold">ዝቅተኛ ክፍያ $0.50</p>
+                        <select class="w-full p-4 mb-4 rounded-xl bg-gray-900 border border-gray-700">
+                            <option>ቴሌብር (Telebirr)</option>
+                            <option>ንግድ ባንክ (CBE)</option>
+                            <option>አቢሲኒያ ባንክ</option>
+                            <option>አዋሽ ባንክ</option>
+                        </select>
+                        <input type="number" placeholder="የስልክ ቁጥር" class="w-full p-4 mb-4 rounded-xl bg-gray-900 border border-gray-700">
+                        <input type="text" placeholder="ሙሉ ስም" class="w-full p-4 mb-6 rounded-xl bg-gray-900 border border-gray-700">
+                        <button onclick="alert('ጥያቄዎ ተልኳል!')" class="w-full bg-green-600 p-4 rounded-xl font-bold text-lg">ክፍያ ይጠይቁ</button>
+                    </div>`;
+            } else if(page === 'profile') {
+                content.innerHTML = `
+                    <div class="text-center mt-10">
+                        <i class="fas fa-user-circle text-7xl text-gray-600 mb-4"></i>
+                        <h2 class="text-2xl font-bold">ተጠቃሚ</h2>
+                        <p class="text-gray-400">Referral ID: ETH-${Math.floor(Math.random() * 9000) + 1000}</p>
+                        <button onclick="location.reload()" class="mt-10 text-red-500 border border-red-500 px-8 py-2 rounded-full">መተግበሪያውን አድስ</button>
+                    </div>`;
             }
         }
 
-        function updateBanks(val) {
-            const list = document.getElementById('bankList');
-            if(val === 'ET') list.innerHTML = `<option>ቴሌብር (Telebirr)</option><option>ንግድ ባንክ (CBE)</option><option>አዋሽ ባንክ</option>`;
-            else list.innerHTML = `<option>PayPal</option><option>USDT (Crypto)</option>`;
+        function renderTask(title, pay, link) {
+            return `
+                <div class="bg-[#1e293b] p-5 rounded-2xl flex justify-between items-center border border-gray-700">
+                    <div><p class="font-medium">${title}</p><p class="text-green-400 font-bold">+$${pay}</p></div>
+                    <button onclick="doTask('${link}', ${pay})" class="bg-green-600 px-6 py-2 rounded-lg font-bold">ስራ</button>
+                </div>`;
         }
 
-        function logout() { localStorage.clear(); location.reload(); }
+        function doTask(link, pay) {
+            window.open(link, '_blank');
+            currentBalance += pay;
+            document.getElementById('balance').innerText = '$' + currentBalance.toFixed(2);
+        }
+
+        function copyReferral() {
+            alert("የመጋበዣ ሊንክዎ ተቀድቷል!");
+        }
+
+        // መጀመሪያ ሲከፈት Home እንዲታይ
+        navigate('home');
     </script>
 </body>
 </html>
