@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethio Job Finder - Premium v7</title>
+    <title>Ethio Job Finder - Premium v7.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-6423416979717513" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
             </div>
             <div class="flex gap-2">
                 <button onclick="dailyBonus()" class="bg-yellow-500/10 text-yellow-500 p-3 rounded-2xl border border-yellow-500/20"><i class="fas fa-gift"></i></button>
-                <a href="https://t.me/YOUR_USERNAME" target="_blank" class="bg-blue-500/10 text-blue-500 p-3 rounded-2xl border border-blue-500/20"><i class="fas fa-headset"></i></a>
+                <a href="https://t.me/Leohafru1" target="_blank" class="bg-blue-500/10 text-blue-500 p-3 rounded-2xl border border-blue-500/20"><i class="fas fa-headset"></i></a>
             </div>
         </div>
 
@@ -45,7 +45,6 @@
     </div>
 
     <script>
-        // ADMOB & USER INFO
         const AD_UNIT_ID = "ca-app-pub-6423416979717513/8315667035";
         let balance = parseFloat(localStorage.getItem('global_bal')) || 0.00;
         let phone = localStorage.getItem('user_phone');
@@ -64,7 +63,7 @@
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             document.getElementById('userDisplay').innerText = "Account: " + localStorage.getItem('user_phone');
-            navigate('home');
+            navigate('task');
         }
 
         function navigate(page) {
@@ -74,76 +73,42 @@
                 <div class="space-y-6">
                     <div class="bg-gradient-to-r from-green-600 to-teal-600 p-6 rounded-3xl shadow-xl">
                         <h3 class="font-black text-xl italic">Contact Admin</h3>
-                        <p class="text-xs opacity-90 mb-4">Any issues? Chat with us on Telegram.</p>
-                        <a href="https://t.me/YOUR_USERNAME" class="bg-white text-green-600 px-6 py-2 rounded-xl font-bold text-xs inline-block">MESSAGE ME</a>
-                    </div>
-                    <div class="bg-[#161e2d] p-6 rounded-3xl border border-slate-800">
-                        <h4 class="text-xs font-bold text-gray-400 uppercase mb-4 tracking-tighter">Your Referral Link</h4>
-                        <div class="flex gap-2">
-                            <input readonly value="https://ethiojob.com/ref?id=${phone}" class="bg-[#0b0f1a] border border-slate-700 p-3 rounded-xl text-[10px] flex-1 outline-none">
-                            <button onclick="alert('Copied!')" class="bg-blue-600 px-4 rounded-xl text-xs font-bold">COPY</button>
-                        </div>
+                        <p class="text-xs opacity-90 mb-4">Any issues? Chat with Leohafru1 on Telegram.</p>
+                        <a href="https://t.me/Leohafru1" class="bg-white text-green-600 px-6 py-2 rounded-xl font-bold text-xs inline-block">MESSAGE ME</a>
                     </div>
                 </div>`;
             } else if(page === 'task') {
                 content.innerHTML = `<h2 class="text-lg font-black mb-6 uppercase tracking-widest text-green-500">Live Tasks (18)</h2>
                 <div class="grid grid-cols-1 gap-3">
-                    ${renderTask(1, 0.005, "youtube")} ${renderTask(2, 0.005, "video")}
-                    ${renderTask(3, 0.004, "play")} ${renderTask(4, 0.005, "youtube")}
-                    ${renderTask(5, 0.006, "tiktok")} ${renderTask(6, 0.005, "video")}
-                    ${renderTask(7, 0.004, "play")} ${renderTask(8, 0.003, "twitter")}
-                    ${renderTask(9, 0.005, "youtube")} ${renderTask(10, 0.005, "tiktok")}
-                    ${renderTask(11, 0.004, "video")} ${renderTask(12, 0.005, "play")}
-                    ${renderTask(13, 0.005, "youtube")} ${renderTask(14, 0.006, "video")}
-                    ${renderTask(15, 0.005, "tiktok")} ${renderTask(16, 0.004, "twitter")}
-                    ${renderTask(17, 0.005, "play")} ${renderTask(18, 0.010, "star")}
+                    ${renderTask(1, 0.005)} ${renderTask(2, 0.005)} ${renderTask(3, 0.004)} ${renderTask(4, 0.005)}
+                    ${renderTask(5, 0.006)} ${renderTask(6, 0.005)} ${renderTask(7, 0.004)} ${renderTask(8, 0.003)}
+                    ${renderTask(9, 0.005)} ${renderTask(10, 0.005)} ${renderTask(11, 0.004)} ${renderTask(12, 0.005)}
+                    ${renderTask(13, 0.005)} ${renderTask(14, 0.006)} ${renderTask(15, 0.005)} ${renderTask(16, 0.004)}
+                    ${renderTask(17, 0.005)} ${renderTask(18, 0.010)}
                 </div>`;
-            } else if(page === 'game') {
-                content.innerHTML = `<div class="text-center py-20"><i class="fas fa-vial text-5xl text-slate-800 mb-4"></i><p class="text-gray-500">Games are in Beta testing...</p></div>`;
             } else if(page === 'withdraw') {
                 content.innerHTML = `
-                <div class="bg-[#161e2d] p-6 rounded-3xl border border-slate-800">
-                    <h3 class="font-black text-xl mb-6">Cash Out</h3>
-                    <div class="space-y-4">
-                        <div class="bg-[#0b0f1a] p-4 rounded-2xl border border-slate-700 flex justify-between items-center">
-                            <span class="font-bold text-sm">Telebirr / Mobile</span><i class="fas fa-check-circle text-green-500"></i>
-                        </div>
-                        <div class="bg-[#0b0f1a] p-4 rounded-2xl border border-slate-700 flex justify-between items-center">
-                            <span class="font-bold text-sm">CBE / Bank</span><i class="fas fa-university text-blue-400"></i>
-                        </div>
-                        <input type="text" placeholder="Enter Account/Phone No" class="w-full p-4 rounded-2xl bg-[#0b0f1a] border border-slate-700 mt-2 outline-none">
-                        <button onclick="alert('Min withdraw is $0.50')" class="w-full bg-green-600 py-4 rounded-2xl font-black shadow-lg shadow-green-900/20 mt-4">REDEEM NOW</button>
-                    </div>
+                <div class="bg-[#161e2d] p-8 rounded-3xl border border-slate-800">
+                    <h3 class="font-black text-xl mb-6">Cash Out to Leohafru1</h3>
+                    <input type="text" placeholder="Enter Bank/Telebirr Details" class="w-full p-4 rounded-2xl bg-[#0b0f1a] border border-slate-700 outline-none">
+                    <button onclick="alert('Min withdraw is $0.50')" class="w-full bg-green-600 py-4 rounded-2xl font-black mt-4">REDEEM NOW</button>
                 </div>`;
+            } else {
+                content.innerHTML = `<div class="text-center py-20 text-gray-500">Coming Soon...</div>`;
             }
-            updateUI();
         }
 
-        function renderTask(id, pay, icon) {
+        function renderTask(id, pay) {
             return `
             <div onclick="triggerAd(${pay})" class="bg-[#161e2d] p-4 rounded-2xl flex justify-between items-center border border-slate-800 active:scale-95 transition-all cursor-pointer">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-[#0b0f1a] rounded-xl flex items-center justify-center text-green-500 shadow-inner">
-                        <i class="fas fa-${icon}"></i>
-                    </div>
-                    <div>
-                        <p class="font-black text-sm">Task #${id}</p>
-                        <p class="text-[10px] text-green-500 font-bold">Reward: $${pay}</p>
-                    </div>
-                </div>
-                <i class="fas fa-play text-gray-600"></i>
+                <div><p class="font-black text-sm">Task #${id}</p><p class="text-[10px] text-green-500 font-bold">Reward: $${pay}</p></div>
+                <i class="fas fa-play text-green-500"></i>
             </div>`;
         }
 
         function triggerAd(amount) {
             alert("Loading Video Ad... Please wait 30 seconds to earn $" + amount);
             balance += amount;
-            updateUI();
-        }
-
-        function dailyBonus() {
-            alert("Daily Gift: $0.01 added!");
-            balance += 0.01;
             updateUI();
         }
 
