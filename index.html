@@ -7,176 +7,18 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root { --primary: #0088cc; --dark: #1a1a1a; --success: #27ae60; --bg: #f0f2f5; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
-        
-        /* Top Navigation */
-        .top-nav { background: var(--dark); color: white; padding: 25px 20px; text-align: center; border-radius: 0 0 25px 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .balance-card { background: white; margin: -25px 20px 15px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border: 1px solid #eee; }
-        .balance-label { font-size: 0.9em; color: #666; text-transform: uppercase; letter-spacing: 1px; }
-        .balance-amount { font-size: 2.5em; font-weight: 800; color: var(--primary); margin-top: 5px; }
-
-        /* Navigation Pages */
-        .page { display: none; padding: 15px; animation: slideIn 0.3s ease-out; }
-        .page.active { display: block; }
-        @keyframes slideIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        /* Task Design */
-        .task-card { background: white; padding: 18px; border-radius: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 6px solid var(--primary); }
-        .task-info h4 { margin: 0 0 5px 0; font-size: 1.05em; color: #333; }
-        .task-info span { color: var(--success); font-weight: bold; font-size: 0.95em; }
-
-        /* Buttons */
-        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn:active { transform: scale(0.92); }
-        .btn-withdraw { background: var(--success); width: 100%; padding: 16px; font-size: 1.1em; margin-top: 15px; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
-
-        /* Bottom Menu */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 1000; }
-        .nav-item { border: none; background: none; color: #95a5a6; font-size: 0.75em; display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; transition: 0.3s; }
-        .nav-item.active { color: var(--primary); font-weight: bold; transform: translateY(-3px); }
-        .nav-item .icon { font-size: 1.6em; margin-bottom: 4px; }
-
-        /* Form Inputs */
-        input, select { width: 93%; padding: 14px; margin: 10px 0; border: 1.5px solid #eee; border-radius: 12px; background: #fdfdfd; font-size: 1em; }
-        input:focus { border-color: var(--primary); outline: none; }
-    </style>
-</head>
-<body>
-
-    <div class="top-nav">
-        <h3 style="margin:0; letter-spacing: 1px;">ETHIO JOB PRO</h3>
-    </div>
-
-    <div class="balance-card">
-        <div class="balance-label">ጠቅላላ የሥራ ገቢ</div>
-        <div class="balance-amount"><span id="main-bal">0.00</span> ETB</div>
-    </div>
-
-    <div id="home" class="page active">
-        <h3 style="margin: 10px 0 15px 5px;">ትኩስ ስራዎች 🔥</h3>
-        <div id="home-tasks"></div>
-    </div>
-
-    <div id="tasks" class="page">
-        <h3 style="margin: 10px 0 15px 5px;">ሁሉም ስራዎች (16)</h3>
-        <div id="all-tasks"></div>
-    </div>
-
-    <div id="withdraw" class="page">
-        <div style="background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-            <h3 style="margin-top:0;">ብር ማውጫ (Withdraw)</h3>
-            <p style="color: #777; font-size: 0.9em;">የመረጡት የክፍያ ዘዴ ላይ መረጃዎን ያስገቡ።</p>
-            <select id="method">
-                <option value="Telebirr">ቴሌብር (Telebirr)</option>
-                <option value="CBE">ንግድ ባንክ (CBE)</option>
-                <option value="Abyssinia">አቢሲኒያ ባንክ</option>
-            </select>
-            <input type="number" id="acc" placeholder="የስልክ ወይም አካውንት ቁጥር">
-            <input type="text" id="name" placeholder="ሙሉ ስም">
-            <button class="btn btn-withdraw" onclick="submitWithdraw()">ጥያቄ ላክ</button>
-        </div>
-    </div>
-
-    <div id="profile" class="page">
-        <div style="background: white; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-            <div style="font-size: 4.5em; margin-bottom: 10px;">👤</div>
-            <h2 id="user-display" style="margin: 10px 0;">ተጠቃሚ</h2>
-            <div style="display: flex; justify-content: space-around; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
-                <div><small>ስራዎች</small><br><b>16</b></div>
-                <div><small>ዝቅተኛ ክፍያ</small><br><b>150 ETB</b></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <button class="nav-item active" onclick="showPage('home', this)"><span class="icon">🏠</span>Home</button>
-        <button class="nav-item" onclick="showPage('tasks', this)"><span class="icon">📋</span>Tasks</button>
-        <button class="nav-item" onclick="showPage('withdraw', this)"><span class="icon">💸</span>Withdraw</button>
-        <button class="nav-item" onclick="showPage('profile', this)"><span class="icon">👤</span>Profile</button>
-    </div>
-
-<script>
-    let balance = 0.00;
-    const botToken = "8638798872:AAGaKoLv9VSRRK3nI7UPx8iJc6byQ5L3tBc";
-    const chatId = "7821771120";
-
-    function addMoney(amt, btn) {
-        balance += amt;
-        document.getElementById('main-bal').innerText = balance.toFixed(2);
-        btn.disabled = true;
-        btn.innerText = "ተጠናቀቀ ✔️";
-        btn.style.background = "#bdc3c7";
-    }
-
-    function showPage(pageId, btn) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        btn.classList.add('active');
-    }
-<div id="profile" class="page">
-    <div style="background: white; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-        <div style="font-size: 4em; margin-bottom: 10px;">👤</div>
-        <h2 style="margin-bottom: 5px;">የእኔ መለያ</h2>
-        <p style="color: #666;">የተጠቃሚ ስም: @Leohaftu1</p>
-        <hr style="border: 0.5px solid #eee; margin: 20px 0;">
-        
-        <h3 style="color: #0088cc;">ማስታወቂያ ማሰራት ይፈልጋሉ?</h3>
-        <p style="font-size: 0.9em; color: #666; padding: 0 10px;">ቻናልዎን ወይም ቪዲዮዎን በብዙ ሺህ የሚቆጠሩ ሰዎች እንዲያዩት ይፈልጋሉ? አሁኑኑ ያነጋግሩን።</p>
-        
-        <a href="https://t.me/Leohaftu1" target="_blank" style="background: #0088cc; color: white; text-decoration: none; display: block; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,136,204,0.3);">ለማስታወቂያ ያነጋግሩኝ</a>
-    </div>
-</div>
-
-    function submitWithdraw() {
-        const method = document.getElementById('method').value;
-        const accNum = document.getElementById('acc').value;
-        const accName = document.getElementById('name').value;
-
-        if(accNum && accName) {
-            const msg = `🚨 አዲስ የክፍያ ጥያቄ!\nዘዴ: ${method}\nቁጥር: ${accNum}\nስም: ${accName}\nመጠን: ${balance.toFixed(2)} ETB`;
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}`);
-            alert("ጥያቄዎ ተልኳል! በ 24 ሰዓት ውስጥ ይከፈልዎታል።");
-            balance = 0;
-            document.getElementById('main-bal').innerText = "0.00";
-            showPage('home', document.querySelector('.nav-item'));
-        } else {
-            alert("እባክዎን መረጃዎን በትክክል ይሙሉ!");
-        }
-    }
-<!DOCTYPE html>
-<html lang="am">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethio Job Pro</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        :root { --primary: #0088cc; --dark: #1a1a1a; --success: #27ae60; --bg: #f0f2f5; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
         .top-nav { background: var(--dark); color: white; padding: 25px 20px; text-align: center; border-radius: 0 0 25px 25px; }
         .balance-card { background: white; margin: -25px 20px 15px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         .balance-amount { font-size: 2.5em; font-weight: 800; color: var(--primary); }
         .page { display: none; padding: 15px; }
         .page.active { display: block; }
-        .task-card { background: white; padding: 18px; border-radius: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .task-card { background: white; padding: 18px; border-radius: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid var(--primary); }
         .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; }
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
         .nav-item { border: none; background: none; color: #95a5a6; display: flex; flex-direction: column; align-items: center; flex: 1; font-size: 0.8em; }
         .nav-item.active { color: var(--primary); font-weight: bold; }
-            function startTask(url, amt, btn) {
-        window.open(url, "_blank");
-        btn.innerText = "ቪዲዮውን በማረጋገጥ ላይ (30s)..."; // ሰዓቱን ጨምረናል
-        btn.disabled = true; // እንዳይደጋግመው መጀመሪያውኑ ይዘጋል
-        
-        setTimeout(() => {
-            balance += amt;
-            document.getElementById('main-bal').innerText = balance.toFixed(2);
-            btn.innerText = "ተጠናቀቀ ✔️";
-            btn.style.background = "#ccc";
-        }, 30000); // 30 ሰከንድ እንዲቆይ ተደርጓል
-    }
-
+        input, select { width: 92%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; }
     </style>
 </head>
 <body>
@@ -189,16 +31,28 @@
 
     <div id="home" class="page active"><div id="home-tasks"></div></div>
     <div id="tasks" class="page"><div id="all-tasks"></div></div>
+    
     <div id="withdraw" class="page">
         <div style="background: white; padding: 20px; border-radius: 20px;">
             <h3>ብር ማውጫ (Withdraw)</h3>
             <select id="method"><option>Telebirr</option><option>CBE</option></select>
-            <input type="number" id="acc" placeholder="የስልክ ወይም አካውንት ቁጥር">
-            <input type="text" id="name" placeholder="ሙሉ ስም">
+            <input type="number" id="acc" placeholder="ቁጥር ያስገቡ">
+            <input type="text" id="name" placeholder="ሙሉ ስም ያስገቡ">
             <button class="btn" style="width:100%; padding:15px; background:var(--success);" onclick="submitWithdraw()">ጥያቄ ላክ</button>
         </div>
     </div>
-    <div id="profile" class="page"><h3>የእርስዎ መለያ</h3><p>ጠቅላላ ስራዎች: 16</p></div>
+
+    <div id="profile" class="page">
+        <div style="background: white; padding: 25px; border-radius: 20px; text-align: center;">
+            <div style="font-size: 4em;">👤</div>
+            <h3>የእኔ መለያ</h3>
+            <p>የተጠቃሚ ስም: @Leohaftu1</p>
+            <hr style="border: 0.5px solid #eee; margin: 20px 0;">
+            <h3 style="color: #0088cc;">ማስታወቂያ ማሰራት ይፈልጋሉ?</h3>
+            <p style="font-size: 0.9em; color: #666;">ቻናልዎን ወይም ቪዲዮዎን ማስተዋወቅ ከፈለጉ ያነጋግሩን።</p>
+            <a href="https://t.me/Leohaftu1" target="_blank" style="background: #0088cc; color: white; text-decoration: none; display: block; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 15px;">ለማስታወቂያ ያነጋግሩኝ</a>
+        </div>
+    </div>
 
     <div class="bottom-nav">
         <button class="nav-item active" onclick="showPage('home', this)">🏠<br>Home</button>
@@ -212,24 +66,11 @@
     const botToken = "8638798872:AAGaKoLv9VSRRK3nI7UPx8iJc6byQ5L3tBc";
     const chatId = "7821771120";
 
-    // ታስኮች እና ሊንኮች (እዚህ ጋር ሊንኮቹን ቀይር)
     const tasksData = [
-        {t: "ቴሌግራም መቀላቀል", r: 5, link: "https://t.me/የአንተ_ቻናል"}, 
-        {t: "ዩቲዩብ ሰብስክራይብ", r: 10, link: "https://youtube.com/የአንተ_ቻናል"},
-        {t: "ቲክቶክ ፎሎው", r: 4, link: "https://tiktok.com/@የአንተ_አካውንት"},
-        {t: "ድረ-ገጽ መጎብኘት", r: 3, link: "https://google.com"},
-        {t: "ቪዲዮ ላይክ ማድረግ", r: 2, link: "https://youtube.com/ቪዲዮ_ሊንክ"},
-        {t: "ቦት ማስጀመር", r: 8, link: "https://t.me/የአንተ_ቦት"},
-        {t: "ኢንስታግራም መከተል", r: 3, link: "https://instagram.com"},
-        {t: "ፌስቡክ ሼር", r: 5, link: "https://facebook.com"},
-        {t: "አፕ ደረጃ መስጠት", r: 12, link: "https://play.google.com"},
-        {t: "ኮሜንት መጻፍ", r: 4, link: "https://t.me"},
-        {t: "ማስታወቂያ ማየት", r: 3, link: "https://google.com"},
-        {t: "ጥያቄ መመለስ", r: 10, link: "https://t.me"},
-        {t: "አፕ መጫን", r: 20, link: "https://play.google.com"},
-        {t: "ጓደኛ መጋበዝ", r: 15, link: "https://t.me"},
-        {t: "ቲክቶክ ቪዲዮ ማየት", r: 6, link: "https://tiktok.com"},
-        {t: "ሰብስክራይብ ማድረግ", r: 9, link: "https://youtube.com"}
+        {t: "ቴሌግራም መቀላቀል", r: 5, link: "https://t.me/EthioJobFinder"}, 
+        {t: "ዩቲዩብ ሰብስክራይብ", r: 10, link: "https://youtube.com"},
+        {t: "ቲክቶክ ፎሎው", r: 4, link: "https://tiktok.com"},
+        {t: "ድረ-ገጽ መጎብኘት", r: 3, link: "https://google.com"}
     ];
 
     function startTask(url, amt, btn) {
@@ -252,33 +93,22 @@
     }
 
     function submitWithdraw() {
-        const method = document.getElementById('method').value;
         const acc = document.getElementById('acc').value;
         const name = document.getElementById('name').value;
         if(acc && name) {
-            const msg = `🚨 አዲስ ጥያቄ!\nዘዴ: ${method}\nቁጥር: ${acc}\nስም: ${name}\nመጠን: ${balance.toFixed(2)} ETB`;
+            const msg = `🚨 አዲስ ጥያቄ!\nዘዴ: ${document.getElementById('method').value}\nቁጥር: ${acc}\nስም: ${name}\nመጠን: ${balance.toFixed(2)} ETB`;
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}`);
             alert("ጥያቄዎ ተልኳል!");
             balance = 0;
             document.getElementById('main-bal').innerText = "0.00";
-            showPage('home', document.querySelector('.nav-item'));
-        } else { alert("እባክዎን መረጃ ይሙሉ!"); }
+        }
     }
 
-    // ስራዎቹን መደርደር
     tasksData.forEach((task, index) => {
-        const html = `
-        <div class="task-card">
-            <div><h4>${task.t}</h4><span>+${task.r}.00 ETB</span></div>
-            <button class="btn" onclick="startTask('${task.link}', ${task.r}, this)">ስራ</button>
-        </div>`;
+        const html = `<div class="task-card"><div><h4>${task.t}</h4><span>+${task.r} ETB</span></div><button class="btn" onclick="startTask('${task.link}', ${task.r}, this)">ስራ</button></div>`;
         document.getElementById('all-tasks').innerHTML += html;
         if(index < 4) document.getElementById('home-tasks').innerHTML += html;
     });
-</script>
-</body>
-</html>
-
 </script>
 </body>
 </html>
