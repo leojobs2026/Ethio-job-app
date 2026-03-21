@@ -1,127 +1,14 @@
-<!DOCTYPE html>
-<html lang="am">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethio Job Pro - Dollar Edition</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        :root { --primary: #27ae60; --dark: #2c3e50; --bg: #f9f9f9; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
-        .top-nav { background: var(--dark); color: white; padding: 25px; text-align: center; border-radius: 0 0 25px 25px; font-size: 1.2em; }
-        .balance-card { background: white; margin: -25px 20px 15px; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-bottom: 4px solid var(--primary); }
-        .balance-amount { font-size: 3em; font-weight: bold; color: var(--primary); }
-        .page { display: none; padding: 15px; animation: fadeIn 0.4s; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .task-card { background: white; padding: 18px; border-radius: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .task-info h4 { margin: 0; font-size: 1em; color: #333; }
-        .task-info span { color: var(--primary); font-weight: bold; font-size: 0.9em; }
-        .btn { background: var(--primary); color: white; border: none; padding: 12px 18px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn:disabled { background: #bdc3c7; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
-        .nav-item { border: none; background: none; color: #7f8c8d; font-size: 0.8em; display: flex; flex-direction: column; align-items: center; }
-        .nav-item.active { color: var(--primary); }
-    </style>
-</head>
-<body>
+# Ethio Job Pro $ (Version 2.0)
 
-    <div class="top-nav"><b>ETHIO JOB PRO $</b></div>
-    
-    <div class="balance-card">
-        <div style="color: #7f8c8d; font-size: 0.9em;">የእርስዎ የዶላር ገቢ</div>
-        <div class="balance-amount">$<span id="main-bal">0.00</span></div>
-        <div style="font-size: 0.8em; color: #95a5a6;">በምንዛሬ በቴሌብር ይከፈልዎታል</div>
-    </div>
+A global micro-tasking application with secure authentication and multi-channel payouts.
 
-    <div id="home" class="page active">
-        <h3 style="margin-left: 10px;">የዛሬ ምርጥ ስራዎች 🔥</h3>
-        <div id="home-tasks"></div>
-    </div>
+## New Features
+- **Dual Auth:** Support for Phone (OTP) and Email/Password login.
+- **Global Payouts:** Integrated fields for Telebirr, PayPal, and USDT.
+- **Security:** Automatic VPN detection and device fingerprinting.
+- **Referral System:** Automated bonus tracking for user invitations.
 
-    <div id="withdraw" class="page">
-        <div style="background: white; padding: 25px; border-radius: 20px;">
-            <h3 style="text-align: center;">ገንዘብ ማውጫ (Withdraw)</h3>
-            <p style="text-align: center; color: #e74c3c;">ዝቅተኛው የክፍያ መጠን $0.50 ነው።</p>
-            <input type="number" id="acc" placeholder="የቴሌብር ወይም ባንክ ቁጥር" style="width: 92%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px;">
-            <input type="text" id="name" placeholder="ሙሉ ስም" style="width: 92%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px;">
-            <button class="btn" style="width:100%; padding: 18px; background: #2ecc71;" onclick="submitWithdraw()">ክፍያ ጠይቅ</button>
-        </div>
-    </div>
-
-    <div id="profile" class="page">
-        <div style="background: white; padding: 30px; border-radius: 20px; text-align: center;">
-            <div style="font-size: 4em; margin-bottom: 10px;">👤</div>
-            <h3>@Leohaftu1</h3>
-            <p style="color: #7f8c8d;">ለማንኛውም ጥያቄ እኛን ያነጋግሩ</p>
-            <a href="https://t.me/Leohaftu1" style="display: block; background: #3498db; color: white; padding: 15px; border-radius: 10px; text-decoration: none; font-weight: bold; margin-top: 15px;">ቴሌግራም ላይ አውራኝ</a>
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <button class="nav-item active" onclick="showPage('home', this)">🏠<br>Home</button>
-        <button class="nav-item" onclick="showPage('withdraw', this)">💰<br>Withdraw</button>
-        <button class="nav-item" onclick="showPage('profile', this)">👤<br>Profile</button>
-    </div>
-
-<script>
-    let balance = 0.00;
-    const botToken = "8638798872:AAGaKoLv9VSRRK3nI7UPx8iJc6byQ5L3tBc"; //
-    const chatId = "7821771120"; //
-
-    // ታስኮች - ቪዲዮዎችን በሚስብ ርዕስ እዚህ ጋር ቀይራቸው
-    const tasksData = [
-        {t: "አዲስ ምርጥ የሙዚቃ ቪዲዮ", r: 0.02, link: "https://shrinkme.io/v1"},
-        {t: "አስቂኝ የቲክቶክ ቪዲዮዎች", r: 0.02, link: "https://shrinkme.io/v2"},
-        {t: "የሳምንቱ ምርጥ ፊልም ትሬለር", r: 0.03, link: "https://shrinkme.io/v3"},
-        {t: "የቴክኖሎጂ መረጃዎች", r: 0.02, link: "https://shrinkme.io/v4"},
-        {t: "ቲክቶክ ላይ ፎሎው አድርገኝ", r: 0.05, link: "https://tiktok.com/@Leohaftu1"},
-        {t: "ቴሌግራም ቻናል ተቀላቀል", r: 0.05, link: "https://t.me/EthioJobFinder"}
-    ];
-
-    function startTask(url, amt, btn) {
-        window.open(url, "_blank");
-        let timeLeft = 30; // 30 ሰከንድ መጠበቂያ
-        btn.disabled = true;
-        
-        const timer = setInterval(() => {
-            btn.innerText = `ቆይ (${timeLeft}s)`;
-            timeLeft--;
-            if (timeLeft < 0) {
-                clearInterval(timer);
-                balance += amt;
-                document.getElementById('main-bal').innerText = balance.toFixed(2);
-                btn.innerText = "ተጠናቀቀ ✔️";
-                btn.style.background = "#bdc3c7";
-            }
-        }, 1000);
-    }
-
-    function showPage(pageId, btn) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    function submitWithdraw() {
-        const acc = document.getElementById('acc').value;
-        const name = document.getElementById('name').value;
-        if(balance < 0.50) return alert("ቢያንስ $0.50 ያስፈልግዎታል!");
-        if(acc && name) {
-            const msg = `💰 አዲስ የዶላር ክፍያ ጥያቄ!\n👤 ስም: ${name}\n📱 ቁጥር: ${acc}\n💵 መጠን: $${balance.toFixed(2)}`;
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}`);
-            alert("ጥያቄዎ ተልኳል! በምንዛሬ ተሰልቶ ይከፈልዎታል።");
-            balance = 0;
-            document.getElementById('main-bal').innerText = "0.00";
-        }
-    }
-
-    tasksData.forEach(task => {
-        const html = `<div class="task-card"><div class="task-info"><h4>${task.t}</h4><span>+$${task.r.toFixed(2)}</span></div>
-        <button class="btn" onclick="startTask('${task.link}', ${task.r}, this)">ስራ</button></div>`;
-        document.getElementById('home-tasks').innerHTML += html;
-    });
-</script>
-</body>
-</html>
+## Tech Stack
+- **Frontend:** Flutter / React Native
+- **Backend:** Firebase / Node.js
+- **Database:** Firestore / MongoDB
