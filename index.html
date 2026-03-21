@@ -3,133 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethio Job Finder - v16</title>
+    <title>Ethio Job Finder - Game Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700;900&display=swap');
-        body { font-family: 'Noto Sans Ethiopic', sans-serif; }
+        body { font-family: 'Noto Sans Ethiopic', sans-serif; background: #0b0f1a; color: white; }
         .page { display: none; }
-        .page-active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .page-active { display: block; }
+        .wheel-spin { animation: spin 2s cubic-bezier(0.1, 0.7, 0.1, 1); }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(1440deg); } }
     </style>
 </head>
-<body class="bg-[#0b0f1a] text-white">
+<body>
 
-    <div class="max-w-md mx-auto min-h-screen relative pb-24">
-        
-        <div class="p-6 bg-[#161e2d] flex justify-between items-center sticky top-0 z-40 border-b border-slate-800">
+    <div id="loginPage" class="flex flex-col items-center justify-center min-h-screen p-6">
+        <div class="bg-[#161e2d] p-10 rounded-[3rem] border border-slate-700 text-center w-full max-w-sm">
+            <h2 class="text-2xl font-black mb-6 text-green-500 italic">ETHIO JOB</h2>
+            <input id="userPhone" type="tel" placeholder="ስልክ ቁጥር ያስገቡ" class="w-full p-4 rounded-2xl bg-black border border-slate-700 mb-4 text-center font-bold outline-none">
+            <button onclick="login()" class="w-full bg-green-600 py-4 rounded-2xl font-black uppercase">መተግበሪያውን ክፈት</button>
+            <p onclick="openAdmin()" class="mt-10 text-[10px] text-slate-600 underline cursor-pointer">Admin Login (Pass: 1234)</p>
+        </div>
+    </div>
+
+    <div id="mainApp" class="hidden max-w-md mx-auto min-h-screen pb-24">
+        <div class="p-6 bg-[#161e2d] flex justify-between items-center sticky top-0 z-50 border-b border-slate-800">
             <div>
-                <p class="text-[10px] text-green-500 font-bold uppercase mb-1">ጠቅላላ ሂሳብ</p>
-                <h1 id="etbBal" class="text-3xl font-black text-white">0.00 ብር</h1>
-                <p id="coinCount" class="text-xs text-yellow-500 font-bold mt-1"><i class="fas fa-coins mr-1"></i> 0 ኮይኖች</p>
+                <p id="displayId" class="text-[10px] text-green-500 font-bold"></p>
+                <h1 id="etbBal" class="text-2xl font-black">0.00 ብር</h1>
+                <p id="coinBal" class="text-xs text-yellow-500 font-bold italic"><i class="fas fa-coins mr-1"></i> 0 ኮይኖች</p>
             </div>
-            <div class="flex gap-2">
-                <button onclick="openShop()" class="bg-yellow-600 px-3 py-2 rounded-xl text-[10px] font-black shadow-lg">ኮይን ግዛ</button>
-                <a href="https://t.me/Leohafru1" class="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-700 text-blue-400">
-                    <i class="fas fa-headset"></i>
-                </a>
-            </div>
+            <button onclick="nav('shop')" class="bg-yellow-600 px-4 py-2 rounded-xl text-[10px] font-black">ኮይን ግዛ</button>
         </div>
 
-        <div id="homePage" class="page page-active p-5 space-y-4">
-            <h2 class="text-sm font-bold text-gray-400 mb-4 px-1 italic underline decoration-green-500 underline-offset-8">የእለቱ ስራዎች</h2>
+        <div id="gamesPage" class="page page-active p-5 space-y-4">
+            <h2 class="text-xs font-bold text-gray-500 uppercase px-1">የእድል ጨዋታዎች (Win/Loss)</h2>
             
-            <div onclick="getReward(10, 0.50)" class="bg-[#161e2d] p-5 rounded-2xl border border-slate-800 flex justify-between items-center active:scale-95 transition">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center shadow-inner"><i class="fas fa-play text-xl"></i></div>
-                    <div><p class="font-bold text-sm">ቪዲዮ ይመልከቱ</p><p class="text-[10px] text-yellow-500">+10 ኮይን / +0.50 ብር</p></div>
-                </div>
-                <i class="fas fa-chevron-right text-slate-700"></i>
+            <div onclick="playGame('spin', 20)" class="bg-[#161e2d] p-5 rounded-2xl border border-slate-800 flex justify-between items-center active:scale-95 transition">
+                <div class="flex items-center gap-4"><i class="fas fa-dharmachakra text-purple-500 text-xl"></i><div><p class="font-bold text-sm">Lucky Spin (እድለኛ ስፒን)</p><p class="text-[10px] text-slate-500">መጫወቻ፡ 20 ኮይን</p></div></div>
+                <button class="bg-slate-800 px-3 py-1 rounded-lg text-[10px]">ተጫወት</button>
+            </div>
+
+            <div onclick="playGame('dice', 50)" class="bg-[#161e2d] p-5 rounded-2xl border border-slate-800 flex justify-between items-center active:scale-95 transition">
+                <div class="flex items-center gap-4"><i class="fas fa-dice text-blue-500 text-xl"></i><div><p class="font-bold text-sm">Dice Roller (ከረንቡላ)</p><p class="text-[10px] text-slate-500">መጫወቻ፡ 50 ኮይን</p></div></div>
+                <button class="bg-slate-800 px-3 py-1 rounded-lg text-[10px]">ተጫወት</button>
+            </div>
+
+            <div onclick="playGame('flip', 30)" class="bg-[#161e2d] p-5 rounded-2xl border border-slate-800 flex justify-between items-center active:scale-95 transition">
+                <div class="flex items-center gap-4"><i class="fas fa-coins text-yellow-500 text-xl"></i><div><p class="font-bold text-sm">Coin Flip (ሰው ወይስ ዛፍ)</p><p class="text-[10px] text-slate-500">መጫወቻ፡ 30 ኮይን</p></div></div>
+                <button class="bg-slate-800 px-3 py-1 rounded-lg text-[10px]">ተጫወት</button>
+            </div>
+
+            <div onclick="playGame('guess', 40)" class="bg-[#161e2d] p-5 rounded-2xl border border-slate-800 flex justify-between items-center active:scale-95 transition">
+                <div class="flex items-center gap-4"><i class="fas fa-question text-green-500 text-xl"></i><div><p class="font-bold text-sm">Number Guess (ቁጥር መገመት)</p><p class="text-[10px] text-slate-500">መጫወቻ፡ 40 ኮይን</p></div></div>
+                <button class="bg-slate-800 px-3 py-1 rounded-lg text-[10px]">ተጫወት</button>
+            </div>
+
+            <div onclick="playGame('slots', 100)" class="bg-[#161e2d] p-5 rounded-2xl border border-slate-800 flex justify-between items-center active:scale-95 transition">
+                <div class="flex items-center gap-4"><i class="fas fa-slot-machine text-red-500 text-xl"></i><div><p class="font-bold text-sm">777 Slots (ጃክፖት)</p><p class="text-[10px] text-slate-500">መጫወቻ፡ 100 ኮይን</p></div></div>
+                <button class="bg-slate-800 px-3 py-1 rounded-lg text-[10px]">ተጫወት</button>
             </div>
         </div>
 
-        <div id="walletPage" class="page p-5">
-            <div class="bg-[#161e2d] p-8 rounded-[2.5rem] border border-slate-800 shadow-2xl">
-                <h3 class="text-xl font-black mb-8 text-center tracking-tighter">ገንዘብ ማውጫ</h3>
-                <div class="space-y-3 mb-8">
-                    <div class="bg-green-500/10 p-5 rounded-2xl border border-green-500/20 flex items-center gap-4"><i class="fas fa-mobile-alt text-green-500 text-xl"></i><span class="font-bold">ቴሌብር (Telebirr)</span></div>
-                    <div class="bg-blue-500/10 p-5 rounded-2xl border border-blue-500/20 flex items-center gap-4"><i class="fas fa-university text-blue-500 text-xl"></i><span class="font-bold">የኢትዮጵያ ንግድ ባንክ</span></div>
+        <div id="shopPage" class="page p-5">
+            <div class="bg-blue-700 rounded-[3rem] p-8 text-center relative shadow-2xl">
+                <button onclick="nav('games')" class="absolute top-6 right-6 text-white text-xl"><i class="fas fa-times"></i></button>
+                <h2 class="text-2xl font-black mb-4 italic uppercase">ኮይን ይግዙ</h2>
+                <div class="bg-black/20 p-4 rounded-2xl mb-6">
+                    <p class="text-[10px] font-bold text-yellow-400">የእርስዎ መለያ (ID)</p>
+                    <p id="myId" class="text-xl font-black tracking-widest text-white">---</p>
                 </div>
-                <input id="accNo" type="text" placeholder="አካውንት ወይም ስልክ ቁጥር" class="w-full p-5 rounded-2xl bg-[#0b0f1a] border border-slate-700 mb-6 outline-none text-green-500 font-bold text-center">
-                <button onclick="sendRequest()" class="w-full bg-green-600 py-5 rounded-2xl font-black shadow-lg shadow-green-900/40">ገንዘብ አውጣ</button>
-                <p class="text-[10px] text-slate-500 mt-6 text-center italic">ዝቅተኛው የክፍያ መጠን፡ 50.00 ብር</p>
+                <div class="bg-black/40 p-5 rounded-2xl text-left space-y-3 mb-6">
+                    <p class="text-xs">ቴሌብር ቁጥር፦ <span class="text-green-400 font-bold underline text-lg">0993053753</span></p>
+                    <p class="text-[9px] text-slate-300 italic">* ብሩን ሲልኩ ID ቁጥርዎን መጥቀስ አይርሱ።</p>
+                </div>
+                <a href="https://t.me/Leohafru1" class="w-full bg-white text-blue-800 py-4 rounded-2xl font-black block uppercase text-sm">ለማረጋገጥ እዚህ ይጫኑ</a>
             </div>
         </div>
 
-        <div id="shopModal" class="fixed inset-0 z-50 bg-[#0b0f1a] hidden flex flex-col p-6 overflow-y-auto">
-            <div class="flex justify-end mb-4">
-                <button onclick="closeShop()" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center border border-white/20 text-white shadow-xl active:scale-75">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-
-            <div class="bg-gradient-to-b from-blue-700 to-blue-900 rounded-[3rem] p-10 flex flex-col items-center text-center shadow-2xl border border-blue-400/20">
-                <div class="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center mb-6 shadow-inner"><i class="fas fa-shopping-cart text-4xl"></i></div>
-                <h2 class="text-3xl font-black mb-2 italic">ኮይን ይግዙ</h2>
-                <p class="text-xs mb-8 opacity-70">ሂሳብዎን አሁን ያሳድጉ!</p>
-
-                <div class="w-full bg-black/20 p-6 rounded-3xl border border-white/10 mb-8">
-                    <p class="text-[10px] font-black uppercase text-yellow-400 mb-2 tracking-widest">ታላቅ ቅናሽ</p>
-                    <p class="text-2xl font-black tracking-tight">10,000 ኮይን = 100 ብር</p>
-                </div>
-
-                <div class="w-full bg-black/40 p-6 rounded-3xl text-left space-y-4 mb-8">
-                    <p class="text-[11px] font-black uppercase text-slate-400">እንዴት ይከፈላል?</p>
-                    <div class="flex flex-col">
-                        <span class="text-[10px] text-slate-400 mb-1">ቴሌብር ቁጥር፦</span>
-                        <span class="text-2xl font-mono font-bold text-green-400 underline decoration-2 underline-offset-4">0993053753</span>
-                    </div>
-                    <p class="text-[9px] text-slate-300 italic">* ከከፈሉ በኋላ የከፈሉበትን ደረሰኝ (Screenshot) ለ Leohafru1 ይላኩ።</p>
-                </div>
-
-                <a href="https://t.me/Leohafru1" class="w-full bg-white text-blue-800 py-5 rounded-2xl font-black shadow-2xl active:scale-95 transition-transform uppercase tracking-tighter">
-                    ደረሰኝ ለመላክ እዚህ ይጫኑ
-                </a>
-            </div>
-        </div>
-
-        <nav class="fixed bottom-6 left-6 right-6 bg-[#161e2d] border border-slate-800 rounded-3xl flex justify-around py-4 shadow-2xl z-40 backdrop-blur-md bg-opacity-90">
-            <button onclick="nav('home')" class="flex flex-col items-center gap-1 text-green-500"><i class="fas fa-briefcase"></i><span class="text-[10px] font-bold">ስራ</span></button>
-            <button onclick="openShop()" class="flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-shopping-basket"></i><span class="text-[10px] font-bold">ግዢ</span></button>
-            <button onclick="nav('wallet')" class="flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-wallet"></i><span class="text-[10px] font-bold">ኪስ ቦርሳ</span></button>
+        <nav class="fixed bottom-6 left-6 right-6 bg-[#161e2d] border border-slate-800 rounded-3xl flex justify-around py-4 shadow-2xl">
+            <button onclick="nav('games')" class="flex flex-col items-center gap-1 text-green-500"><i class="fas fa-gamepad"></i><span class="text-[9px] font-bold">ጌሞች</span></button>
+            <button onclick="nav('shop')" class="flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-shopping-cart"></i><span class="text-[9px] font-bold">ግዢ</span></button>
         </nav>
     </div>
 
+    <div id="adminModal" class="hidden fixed inset-0 bg-[#0b0f1a] z-[100] p-6 flex items-center justify-center">
+        <div class="bg-slate-900 p-8 rounded-[2rem] border border-red-900 w-full max-w-xs text-center">
+            <h2 class="text-red-500 font-black mb-6 italic underline">ADMIN PANEL</h2>
+            <input id="targetId" type="text" placeholder="የተጠቃሚ ID" class="w-full p-4 rounded-xl bg-black mb-4 outline-none font-mono">
+            <input id="coinAmt" type="number" placeholder="የኮይን መጠን" class="w-full p-4 rounded-xl bg-black mb-6 outline-none">
+            <button onclick="addCoinsAdmin()" class="w-full bg-red-600 py-4 rounded-xl font-black mb-4">ADD COINS</button>
+            <p onclick="closeAdmin()" class="text-xs text-slate-500 underline cursor-pointer">ዝጋ</p>
+        </div>
+    </div>
+
     <script>
-        let balance = parseFloat(localStorage.getItem('ethio_v16_bal')) || 0.00;
-        let coins = parseInt(localStorage.getItem('ethio_v16_coins')) || 0;
+        let balance = parseFloat(localStorage.getItem('ej_bal_v19')) || 0;
+        let coins = parseInt(localStorage.getItem('ej_coin_v19')) || 0;
+        let userId = localStorage.getItem('ej_id_v19');
+
+        if(userId) showApp();
+
+        function login() {
+            let phone = document.getElementById('userPhone').value;
+            if(phone.length >= 10) {
+                userId = "ID-" + Math.floor(1000 + Math.random() * 9000);
+                localStorage.setItem('ej_id_v19', userId);
+                showApp();
+            } else { alert("ስልክ ቁጥር ያስገቡ!"); }
+        }
+
+        function showApp() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('displayId').innerText = "መለያ፡ " + userId;
+            document.getElementById('myId').innerText = userId;
+            updateUI();
+        }
 
         function updateUI() {
             document.getElementById('etbBal').innerText = balance.toFixed(2) + " ብር";
-            document.getElementById('coinCount').innerHTML = `<i class="fas fa-coins mr-1"></i> ${coins.toLocaleString()} ኮይኖች`;
-            localStorage.setItem('ethio_v16_bal', balance);
-            localStorage.setItem('ethio_v16_coins', coins);
+            document.getElementById('coinBal').innerHTML = `<i class="fas fa-coins mr-1"></i> ${coins.toLocaleString()} ኮይኖች`;
+            localStorage.setItem('ej_bal_v19', balance);
+            localStorage.setItem('ej_coin_v19', coins);
         }
 
-        function openShop() { document.getElementById('shopModal').classList.remove('hidden'); }
-        function closeShop() { document.getElementById('shopModal').classList.add('hidden'); }
-
-        function nav(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('page-active'));
-            document.getElementById(pageId + 'Page').classList.add('page-active');
+        function nav(p) {
+            document.querySelectorAll('.page').forEach(pg => pg.classList.remove('page-active'));
+            document.getElementById(p + 'Page').classList.add('page-active');
         }
 
-        function getReward(c, b) {
-            alert("ቪዲዮው እስኪጨርስ ይጠብቁ...");
+        function playGame(type, cost) {
+            if(coins < cost) { alert("በቂ ኮይን የለም! እባክዎ ኮይን ይግዙ።"); return; }
+            coins -= cost;
+            updateUI();
+
+            let win = Math.random() > 0.6; // 40% የማሸነፍ እድል
             setTimeout(() => {
-                coins += c; balance += b;
+                if(win) {
+                    let prize = cost * 2;
+                    coins += prize;
+                    balance += (cost / 100);
+                    alert("እንኳን ደስ አሎት! አሸንፈዋል! +" + prize + " ኮይኖች አግኝተዋል።");
+                } else {
+                    alert("በዚህ ዙር አልተሳካሎትም! በድጋሚ ይሞክሩ።");
+                }
                 updateUI();
-                alert("ተሳክቷል! " + b + " ብር እና " + c + " ኮይን አግኝተዋል።");
-            }, 2000);
+            }, 1000);
         }
 
-        function sendRequest() {
-            let acc = document.getElementById('accNo').value;
-            if(balance < 50) { alert("ዝቅተኛው የክፍያ መጠን 50.00 ብር ነው።"); return; }
-            if(acc.length < 10) { alert("ትክክለኛ ስልክ ወይም አካውንት ያስገቡ!"); return; }
-            window.location.href = `https://t.me/Leohafru1?text=የክፍያ ጥያቄ%0Aአካውንት: ${acc}%0Aመጠን: ${balance.toFixed(2)} ብር`;
-            balance = 0; updateUI();
+        // --- ADMIN ---
+        function openAdmin() {
+            let pass = prompt("Admin Password?");
+            if(pass === "1234") document.getElementById('adminModal').classList.remove('hidden');
+        }
+        function closeAdmin() { document.getElementById('adminModal').classList.add('hidden'); }
+        
+        function addCoinsAdmin() {
+            let id = document.getElementById('targetId').value;
+            let amt = parseInt(document.getElementById('coinAmt').value);
+            if(id === userId) {
+                coins += amt;
+                updateUI();
+                alert(amt + " ኮይኖች ተጨምረዋል!");
+                closeAdmin();
+            } else { alert("ID አልተገኘም!"); }
         }
 
         updateUI();
