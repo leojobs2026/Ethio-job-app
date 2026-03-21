@@ -11,17 +11,17 @@
 
     <div id="mainApp">
         <div class="bg-white m-4 p-8 rounded-3xl text-center shadow-xl">
-            <p class="text-gray-500 font-bold">ያጠራቀሙት ብር</p>
+            <p class="text-gray-500 font-bold italic">ያጠራቀሙት ገቢ</p>
             <h1 id="balance" class="text-6xl font-black text-green-600">$0.00</h1>
+            <p class="text-[10px] text-gray-400 mt-2">በቴሌብር ወይም በባንክ ይከፈልዎታል</p>
         </div>
 
-        <div id="contentArea" class="px-6 pb-24">
-            </div>
+        <div id="contentArea" class="px-6 pb-24"></div>
 
-        <div class="fixed bottom-0 w-full bg-[#1e293b] border-t border-gray-700 flex justify-around p-4">
-            <button onclick="navigate('home')" class="flex flex-col items-center text-green-500"><i class="fas fa-home"></i><span class="text-xs">Home</span></button>
-            <button onclick="navigate('withdraw')" class="flex flex-col items-center"><i class="fas fa-wallet"></i><span class="text-xs">Withdraw</span></button>
-            <button onclick="navigate('profile')" class="flex flex-col items-center"><i class="fas fa-user"></i><span class="text-xs">Profile</span></button>
+        <div class="fixed bottom-0 w-full bg-[#1e293b] border-t border-gray-700 flex justify-around p-4 shadow-2xl">
+            <button onclick="navigate('home')" class="nav-btn flex flex-col items-center text-green-500"><i class="fas fa-home"></i><span class="text-xs">Home</span></button>
+            <button onclick="navigate('withdraw')" class="nav-btn flex flex-col items-center"><i class="fas fa-wallet"></i><span class="text-xs">Withdraw</span></button>
+            <button onclick="navigate('profile')" class="nav-btn flex flex-col items-center"><i class="fas fa-user"></i><span class="text-xs">Profile</span></button>
         </div>
     </div>
 
@@ -30,6 +30,9 @@
 
         function navigate(page) {
             const content = document.getElementById('contentArea');
+            // Reset nav colors
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('text-green-500'));
+            
             if(page === 'home') {
                 content.innerHTML = `
                     <h2 class="text-xl font-bold mb-4 mt-4">የዛሬ ስራዎች</h2>
@@ -38,31 +41,31 @@
                         ${renderTask("ቲክቶክ ቪዲዮ", 0.02, "https://www.youtube.com/shorts/q7n65mZJd2A")}
                         <div class="bg-blue-900/40 p-5 rounded-2xl border border-blue-500 flex justify-between items-center">
                             <div><p class="font-bold">ጓደኛ ጋብዙ</p><p class="text-blue-400">+$0.10</p></div>
-                            <button onclick="copyReferral()" class="bg-blue-600 px-4 py-2 rounded-lg text-sm">ኮድ ቅዳ</button>
+                            <button onclick="alert('የመጋበዣ ኮድዎ ተቀድቷል!')" class="bg-blue-600 px-4 py-2 rounded-lg text-sm">ኮድ ቅዳ</button>
                         </div>
                     </div>`;
             } else if(page === 'withdraw') {
                 content.innerHTML = `
-                    <h2 class="text-xl font-bold mb-4 mt-4 text-green-500">ብር ማውጫ</h2>
+                    <h2 class="text-xl font-bold mb-4 mt-4 text-green-500">ብር ማውጫ (Withdraw)</h2>
                     <div class="bg-[#1e293b] p-6 rounded-2xl border border-gray-700">
-                        <p class="text-sm text-red-400 mb-4 font-bold">ዝቅተኛ ክፍያ $0.50</p>
-                        <select class="w-full p-4 mb-4 rounded-xl bg-gray-900 border border-gray-700">
+                        <p class="text-sm text-red-400 mb-4 font-bold tracking-tight">ዝቅተኛ ክፍያ $0.50</p>
+                        <select class="w-full p-4 mb-4 rounded-xl bg-gray-900 border border-gray-700 text-white outline-none focus:border-green-500">
                             <option>ቴሌብር (Telebirr)</option>
+                            <option>አቢሲኒያ ባንክ (BOA)</option>
                             <option>ንግድ ባንክ (CBE)</option>
-                            <option>አቢሲኒያ ባንክ</option>
                             <option>አዋሽ ባንክ</option>
                         </select>
-                        <input type="number" placeholder="የስልክ ቁጥር" class="w-full p-4 mb-4 rounded-xl bg-gray-900 border border-gray-700">
-                        <input type="text" placeholder="ሙሉ ስም" class="w-full p-4 mb-6 rounded-xl bg-gray-900 border border-gray-700">
-                        <button onclick="alert('ጥያቄዎ ተልኳል!')" class="w-full bg-green-600 p-4 rounded-xl font-bold text-lg">ክፍያ ይጠይቁ</button>
+                        <input type="tel" placeholder="የቴሌብር ወይም የባንክ ስልክ ቁጥር" class="w-full p-4 mb-4 rounded-xl bg-gray-900 border border-gray-700 outline-none focus:border-green-500">
+                        <input type="text" placeholder="ሙሉ ስም" class="w-full p-4 mb-6 rounded-xl bg-gray-900 border border-gray-700 outline-none focus:border-green-500">
+                        <button onclick="alert('ጥያቄዎ ተልኳል! በ 24 ሰዓት ውስጥ ይከፈልዎታል')" class="w-full bg-green-600 p-4 rounded-xl font-bold text-lg hover:bg-green-700 transition">ክፍያ ይጠይቁ</button>
                     </div>`;
             } else if(page === 'profile') {
                 content.innerHTML = `
                     <div class="text-center mt-10">
-                        <i class="fas fa-user-circle text-7xl text-gray-600 mb-4"></i>
-                        <h2 class="text-2xl font-bold">ተጠቃሚ</h2>
-                        <p class="text-gray-400">Referral ID: ETH-${Math.floor(Math.random() * 9000) + 1000}</p>
-                        <button onclick="location.reload()" class="mt-10 text-red-500 border border-red-500 px-8 py-2 rounded-full">መተግበሪያውን አድስ</button>
+                        <div class="w-24 h-24 bg-gray-800 rounded-full mx-auto flex items-center justify-center text-4xl border-2 border-green-500 mb-4"><i class="fas fa-user"></i></div>
+                        <h2 class="text-2xl font-black">@Leohaftu1</h2>
+                        <p class="text-gray-400 mt-2">የእርስዎ መለያ ኮድ: ETH-4491</p>
+                        <button onclick="location.reload()" class="mt-10 text-red-500 border-2 border-red-500 px-10 py-3 rounded-full font-bold hover:bg-red-500 hover:text-white transition">መተግበሪያውን አድስ</button>
                     </div>`;
             }
         }
@@ -71,7 +74,7 @@
             return `
                 <div class="bg-[#1e293b] p-5 rounded-2xl flex justify-between items-center border border-gray-700">
                     <div><p class="font-medium">${title}</p><p class="text-green-400 font-bold">+$${pay}</p></div>
-                    <button onclick="doTask('${link}', ${pay})" class="bg-green-600 px-6 py-2 rounded-lg font-bold">ስራ</button>
+                    <button onclick="doTask('${link}', ${pay})" class="bg-green-600 px-6 py-2 rounded-lg font-bold shadow-md active:scale-95 transition">ስራ</button>
                 </div>`;
         }
 
@@ -81,11 +84,7 @@
             document.getElementById('balance').innerText = '$' + currentBalance.toFixed(2);
         }
 
-        function copyReferral() {
-            alert("የመጋበዣ ሊንክዎ ተቀድቷል!");
-        }
-
-        // መጀመሪያ ሲከፈት Home እንዲታይ
+        // Initialize Home
         navigate('home');
     </script>
 </body>
