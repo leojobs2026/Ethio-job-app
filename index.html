@@ -3,80 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethio Job Finder - Professional</title>
+    <title>Ethio Job Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --primary: #2c3e50; --success: #27ae60; --bg: #f4f7f6; }
-        body { font-family: 'Helvetica Neue', sans-serif; background: var(--bg); margin: 0; padding-bottom: 90px; }
-        .header { background: var(--primary); color: white; padding: 30px 20px; text-align: center; }
-        .balance-box { background: white; margin: -20px 20px 20px; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .bal-text { font-size: 2em; font-weight: bold; color: var(--primary); }
-        .card { background: white; padding: 15px; margin: 10px 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .btn-withdraw { background: var(--success); width: 90%; margin: 20px; padding: 15px; }
-        #withdraw-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; }
-        .modal-content { background: white; margin: 20% auto; padding: 20px; width: 80%; border-radius: 15px; }
-        input, select { width: 92%; padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
+        :root { --primary: #0088cc; --dark: #1a1a1a; --success: #27ae60; --bg: #f0f2f5; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
+        
+        /* Top Navigation */
+        .top-nav { background: var(--dark); color: white; padding: 25px 20px; text-align: center; border-radius: 0 0 25px 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .balance-card { background: white; margin: -25px 20px 15px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border: 1px solid #eee; }
+        .balance-label { font-size: 0.9em; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+        .balance-amount { font-size: 2.5em; font-weight: 800; color: var(--primary); margin-top: 5px; }
+
+        /* Navigation Pages */
+        .page { display: none; padding: 15px; animation: slideIn 0.3s ease-out; }
+        .page.active { display: block; }
+        @keyframes slideIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* Task Design */
+        .task-card { background: white; padding: 18px; border-radius: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 6px solid var(--primary); }
+        .task-info h4 { margin: 0 0 5px 0; font-size: 1.05em; color: #333; }
+        .task-info span { color: var(--success); font-weight: bold; font-size: 0.95em; }
+
+        /* Buttons */
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn:active { transform: scale(0.92); }
+        .btn-withdraw { background: var(--success); width: 100%; padding: 16px; font-size: 1.1em; margin-top: 15px; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
+
+        /* Bottom Menu */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 1000; }
+        .nav-item { border: none; background: none; color: #95a5a6; font-size: 0.75em; display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; transition: 0.3s; }
+        .nav-item.active { color: var(--primary); font-weight: bold; transform: translateY(-3px); }
+        .nav-item .icon { font-size: 1.6em; margin-bottom: 4px; }
+
+        /* Form Inputs */
+        input, select { width: 93%; padding: 14px; margin: 10px 0; border: 1.5px solid #eee; border-radius: 12px; background: #fdfdfd; font-size: 1em; }
+        input:focus { border-color: var(--primary); outline: none; }
     </style>
 </head>
 <body>
 
-<div id="home" class="page active">
-    <div class="header"><h2>Ethio Job Finder</h2></div>
-    <div class="balance-box">
-        <p>ጠቅላላ ገቢዎ</p>
-        <div class="bal-text">💰 <span id="main-bal">0.00</span> ETB</div>
+    <div class="top-nav">
+        <h3 style="margin:0; letter-spacing: 1px;">ETHIO JOB PRO</h3>
     </div>
-    <div id="task-list"></div>
-</div>
 
-<div id="withdraw-modal">
-    <div class="modal-content">
-        <h3>የክፍያ መረጃ</h3>
-        <select id="method"><option>ቴሌብር (Telebirr)</option><option>ንግድ ባንክ (CBE)</option></select>
-        <input type="text" id="acc" placeholder="የስልክ ወይም አካውንት ቁጥር">
-        <input type="text" id="name" placeholder="ሙሉ ስም">
-        <button class="btn" style="width: 100%; background: var(--success);" onclick="submitWithdraw()">ጥያቄ ይላኩ</button>
+    <div class="balance-card">
+        <div class="balance-label">ጠቅላላ የሥራ ገቢ</div>
+        <div class="balance-amount"><span id="main-bal">0.00</span> ETB</div>
     </div>
-</div>
 
-<div style="position: fixed; bottom: 0; width: 100%; background: white; padding: 15px; text-align: center; border-top: 1px solid #eee;">
-    <button class="btn btn-withdraw" onclick="document.getElementById('withdraw-modal').style.display='block'">💸 የክፍያ ጥያቄ (Withdraw)</button>
-</div>
+    <div id="home" class="page active">
+        <h3 style="margin: 10px 0 15px 5px;">ትኩስ ስራዎች 🔥</h3>
+        <div id="home-tasks"></div>
+    </div>
+
+    <div id="tasks" class="page">
+        <h3 style="margin: 10px 0 15px 5px;">ሁሉም ስራዎች (16)</h3>
+        <div id="all-tasks"></div>
+    </div>
+
+    <div id="withdraw" class="page">
+        <div style="background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <h3 style="margin-top:0;">ብር ማውጫ (Withdraw)</h3>
+            <p style="color: #777; font-size: 0.9em;">የመረጡት የክፍያ ዘዴ ላይ መረጃዎን ያስገቡ።</p>
+            <select id="method">
+                <option value="Telebirr">ቴሌብር (Telebirr)</option>
+                <option value="CBE">ንግድ ባንክ (CBE)</option>
+                <option value="Abyssinia">አቢሲኒያ ባንክ</option>
+            </select>
+            <input type="number" id="acc" placeholder="የስልክ ወይም አካውንት ቁጥር">
+            <input type="text" id="name" placeholder="ሙሉ ስም">
+            <button class="btn btn-withdraw" onclick="submitWithdraw()">ጥያቄ ላክ</button>
+        </div>
+    </div>
+
+    <div id="profile" class="page">
+        <div style="background: white; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <div style="font-size: 4.5em; margin-bottom: 10px;">👤</div>
+            <h2 id="user-display" style="margin: 10px 0;">ተጠቃሚ</h2>
+            <div style="display: flex; justify-content: space-around; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+                <div><small>ስራዎች</small><br><b>16</b></div>
+                <div><small>ዝቅተኛ ክፍያ</small><br><b>150 ETB</b></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="showPage('home', this)"><span class="icon">🏠</span>Home</button>
+        <button class="nav-item" onclick="showPage('tasks', this)"><span class="icon">📋</span>Tasks</button>
+        <button class="nav-item" onclick="showPage('withdraw', this)"><span class="icon">💸</span>Withdraw</button>
+        <button class="nav-item" onclick="showPage('profile', this)"><span class="icon">👤</span>Profile</button>
+    </div>
 
 <script>
     let balance = 0.00;
-    
-    function addMoney(amt) {
+    const botToken = "8638798872:AAGaKoLv9VSRRK3nI7UPx8iJc6byQ5L3tBc";
+    const chatId = "7821771120";
+
+    function addMoney(amt, btn) {
         balance += amt;
         document.getElementById('main-bal').innerText = balance.toFixed(2);
+        btn.disabled = true;
+        btn.innerText = "ተጠናቀቀ ✔️";
+        btn.style.background = "#bdc3c7";
+    }
+
+    function showPage(pageId, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        btn.classList.add('active');
     }
 
     function submitWithdraw() {
         const method = document.getElementById('method').value;
-        const acc = document.getElementById('acc').value;
-        const name = document.getElementById('name').value;
-        const token = "8638798872:AAGaKoLv9VSRRK3nI7UPx8iJc6byQ5L3tBc";
-        const cid = "7821771120";
+        const accNum = document.getElementById('acc').value;
+        const accName = document.getElementById('name').value;
 
-        if(acc && name) {
-            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${cid}&text=አዲስ+ክፍያ!+ዘዴ:${method},+ቁጥር:${acc},+ስም:${name},+መጠን:${balance.toFixed(2)}ETB`);
-            alert("ጥያቄዎ ተልኳል! በ 24 ሰዓት ውስጥ ይከፈላል።");
-            document.getElementById('withdraw-modal').style.display = 'none';
-        } else { alert("እባክዎን መረጃ ይሙሉ"); }
+        if(accNum && accName) {
+            const msg = `🚨 አዲስ የክፍያ ጥያቄ!\nዘዴ: ${method}\nቁጥር: ${accNum}\nስም: ${accName}\nመጠን: ${balance.toFixed(2)} ETB`;
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}`);
+            alert("ጥያቄዎ ተልኳል! በ 24 ሰዓት ውስጥ ይከፈልዎታል።");
+            balance = 0;
+            document.getElementById('main-bal').innerText = "0.00";
+            showPage('home', document.querySelector('.nav-item'));
+        } else {
+            alert("እባክዎን መረጃዎን በትክክል ይሙሉ!");
+        }
     }
 
-    const tasks = [
-        {t: "ዩቲዩብ ቪዲዮ ማየት", r: 5}, {t: "ቴሌግራም መቀላቀል", r: 3}, {t: "አፕ መጫን", r: 15},
-        {t: "ቲክቶክ ላይክ", r: 2}, {t: "ፌስቡክ ሼር", r: 4}, {t: "ዌብሳይት መጎብኘት", r: 3}
+    // 16 Professional Tasks
+    const tasksData = [
+        {t: "የዩቲዩብ ቻናል ሰብስክራይብ", r: 10}, {t: "ቴሌግራም ቻናል መቀላቀል", r: 5}, {t: "አፕሊኬሽን ዳውንሎድ", r: 25}, 
+        {t: "ቲክቶክ ቪዲዮ ላይክ", r: 4}, {t: "ፌስቡክ ገጽ መከተል", r: 5}, {t: "ድረ-ገጽ መጎብኘት", r: 8}, 
+        {t: "ጓደኛ መጋበዝ (Referral)", r: 15}, {t: "ኢንስታግራም ፎሎው", r: 3}, {t: "ቦት ማስጀመር", r: 10}, 
+        {t: "ለአፕሊኬሽን ሪቪው መጻፍ", r: 12}, {t: "ቪዲዮ ሼር ማድረግ", r: 6}, {t: "አጭር ማስታወቂያ ማየት", r: 5},
+        {t: "ዩቲዩብ ቪዲዮ ኮሜንት", r: 4}, {t: "የዳሰሳ ጥያቄ መመለስ", r: 12}, {t: "ቲክቶክ ቪዲዮ ማየት", r: 7}, {t: "የሊንክ ክሊክ", r: 3}
     ];
 
-    tasks.forEach(task => {
-        document.getElementById('task-list').innerHTML += `
-            <div class="card">
-                <div><b>${task.t}</b><br><small>+${task.r} ETB</small></div>
-                <button class="btn" onclick="addMoney(${task.r}); this.disabled=true; this.innerText='ተጠናቀቀ'">ስራ</button>
-            </div>`;
+    tasksData.forEach((task, index) => {
+        const html = `
+        <div class="task-card">
+            <div class="task-info"><h4>${task.t}</h4><span>+${task.r}.00 ETB</span></div>
+            <button class="btn" onclick="addMoney(${task.r}, this)">ስራ</button>
+        </div>`;
+        document.getElementById('all-tasks').innerHTML += html;
+        if(index < 4) document.getElementById('home-tasks').innerHTML += html;
     });
 </script>
 </body>
