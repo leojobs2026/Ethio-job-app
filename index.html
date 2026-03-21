@@ -3,50 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethio Job Finder - Premium v7.1</title>
+    <title>Ethio Job Premium v8</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-6423416979717513" crossorigin="anonymous"></script>
+    <style>
+        .active-nav { color: #22c55e !important; transform: translateY(-5px); transition: all 0.3s; }
+        .nav-btn { transition: all 0.3s; }
+    </style>
 </head>
 <body class="bg-[#0b0f1a] text-white font-sans">
 
-    <div id="loginPage" class="flex flex-col items-center justify-center min-h-screen p-6 bg-gradient-to-br from-[#1e293b] to-[#0b0f1a]">
-        <div class="w-full max-w-sm bg-[#161e2d] p-10 rounded-[2.5rem] border border-slate-700 shadow-2xl text-center">
-            <div class="w-24 h-24 bg-green-500 rounded-full mx-auto mb-6 flex items-center justify-center shadow-lg shadow-green-500/30 border-4 border-[#161e2d]">
-                <i class="fas fa-rocket text-4xl text-white"></i>
+    <div id="loginPage" class="flex flex-col items-center justify-center min-h-screen p-6">
+        <div class="w-full max-w-sm bg-[#161e2d] p-10 rounded-[2.5rem] border border-slate-700 text-center shadow-2xl">
+            <div class="w-20 h-20 bg-green-500 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg shadow-green-500/20">
+                <i class="fas fa-user-check text-3xl text-white"></i>
             </div>
-            <h2 class="text-3xl font-black mb-2">Welcome Back!</h2>
-            <p class="text-gray-400 text-sm mb-8 italic">Your journey to earning starts here.</p>
-            <input id="userPhone" type="tel" placeholder="Enter Phone Number" class="w-full p-5 rounded-2xl bg-[#0b0f1a] border border-slate-700 mb-4 text-center focus:border-green-500 outline-none transition-all">
-            <button onclick="login()" class="w-full bg-green-600 hover:bg-green-500 py-5 rounded-2xl font-black text-xl shadow-lg transition-all active:scale-95">LOGIN NOW</button>
+            <h2 class="text-2xl font-black mb-2">Welcome</h2>
+            <p class="text-gray-400 text-sm mb-8">Enter phone to start earning</p>
+            <input id="userPhone" type="tel" placeholder="09 / 07..." class="w-full p-4 rounded-2xl bg-[#0b0f1a] border border-slate-700 mb-4 text-center outline-none focus:border-green-500">
+            <button onclick="login()" class="w-full bg-green-600 py-4 rounded-2xl font-black shadow-lg active:scale-95 transition-all">START NOW</button>
         </div>
     </div>
 
     <div id="mainApp" class="hidden max-w-md mx-auto min-h-screen pb-32">
-        <div class="bg-[#161e2d]/90 backdrop-blur-md sticky top-0 z-50 p-6 border-b border-slate-800 flex justify-between items-center">
+        <div class="bg-[#161e2d]/90 backdrop-blur-md sticky top-0 z-50 p-6 border-b border-slate-800 flex justify-between items-center text-center">
             <div>
-                <p id="userDisplay" class="text-[10px] text-green-500 font-bold tracking-widest uppercase"></p>
-                <h1 id="balance" class="text-4xl font-black">$0.000</h1>
+                <p id="userDisplay" class="text-[10px] text-green-500 font-bold uppercase"></p>
+                <h1 id="balance" class="text-4xl font-black tracking-tighter">$0.000</h1>
             </div>
-            <div class="flex gap-2">
-                <button onclick="dailyBonus()" class="bg-yellow-500/10 text-yellow-500 p-3 rounded-2xl border border-yellow-500/20"><i class="fas fa-gift"></i></button>
-                <a href="https://t.me/Leohafru1" target="_blank" class="bg-blue-500/10 text-blue-500 p-3 rounded-2xl border border-blue-500/20"><i class="fas fa-headset"></i></a>
-            </div>
+            <a href="https://t.me/Leohafru1" target="_blank" class="bg-blue-500/10 text-blue-500 p-3 rounded-2xl border border-blue-500/20">
+                <i class="fas fa-headset"></i>
+            </a>
         </div>
 
-        <div id="contentArea" class="px-5 py-6"></div>
+        <div id="contentArea" class="px-5 py-6">
+            </div>
 
-        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#161e2d] border-t border-slate-800 flex justify-around py-4 rounded-t-3xl shadow-2xl">
-            <button onclick="navigate('home')" class="flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-th-large text-xl"></i><span class="text-[10px] font-bold">Home</span></button>
-            <button onclick="navigate('task')" class="flex flex-col items-center gap-1 text-green-500"><i class="fas fa-play-circle text-xl"></i><span class="text-[10px] font-bold">Tasks</span></button>
-            <button onclick="navigate('game')" class="flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-gamepad text-xl"></i><span class="text-[10px] font-bold">Games</span></button>
-            <button onclick="navigate('withdraw')" class="flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-wallet text-xl"></i><span class="text-[10px] font-bold">Wallet</span></button>
+        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#161e2d] border-t border-slate-800 flex justify-around py-4 rounded-t-[2rem] shadow-2xl">
+            <button onclick="navigate('home', this)" class="nav-btn flex flex-col items-center gap-1 text-gray-500">
+                <i class="fas fa-home text-xl"></i><span class="text-[10px] font-bold">Home</span>
+            </button>
+            <button onclick="navigate('task', this)" class="nav-btn flex flex-col items-center gap-1 text-gray-500">
+                <i class="fas fa-tasks text-xl"></i><span class="text-[10px] font-bold">Tasks</span>
+            </button>
+            <button onclick="navigate('game', this)" class="nav-btn flex flex-col items-center gap-1 text-gray-500">
+                <i class="fas fa-gamepad text-xl"></i><span class="text-[10px] font-bold">Games</span>
+            </button>
+            <button onclick="navigate('wallet', this)" class="nav-btn flex flex-col items-center gap-1 text-gray-500">
+                <i class="fas fa-wallet text-xl"></i><span class="text-[10px] font-bold">Wallet</span>
+            </button>
         </nav>
     </div>
 
     <script>
-        const AD_UNIT_ID = "ca-app-pub-6423416979717513/8315667035";
-        let balance = parseFloat(localStorage.getItem('global_bal')) || 0.00;
+        let balance = parseFloat(localStorage.getItem('ethio_bal')) || 0.00;
         let phone = localStorage.getItem('user_phone');
 
         if(phone) showApp();
@@ -56,65 +67,81 @@
             if(num.length >= 10) {
                 localStorage.setItem('user_phone', num);
                 showApp();
-            } else { alert("Enter a valid phone number!"); }
+            } else { alert("Please enter valid phone number!"); }
         }
 
         function showApp() {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
-            document.getElementById('userDisplay').innerText = "Account: " + localStorage.getItem('user_phone');
-            navigate('task');
+            document.getElementById('userDisplay').innerText = "ID: " + localStorage.getItem('user_phone');
+            navigate('home', document.querySelector('.nav-btn'));
         }
 
-        function navigate(page) {
+        function navigate(page, element) {
             const content = document.getElementById('contentArea');
+            
+            // UI: Change navigation colors
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active-nav'));
+            if(element) element.classList.add('active-nav');
+
+            // Page Logic
             if(page === 'home') {
                 content.innerHTML = `
-                <div class="space-y-6">
-                    <div class="bg-gradient-to-r from-green-600 to-teal-600 p-6 rounded-3xl shadow-xl">
-                        <h3 class="font-black text-xl italic">Contact Admin</h3>
-                        <p class="text-xs opacity-90 mb-4">Any issues? Chat with Leohafru1 on Telegram.</p>
-                        <a href="https://t.me/Leohafru1" class="bg-white text-green-600 px-6 py-2 rounded-xl font-bold text-xs inline-block">MESSAGE ME</a>
+                    <div class="bg-gradient-to-r from-green-600 to-teal-600 p-6 rounded-3xl mb-6 shadow-xl text-center">
+                        <h2 class="text-xl font-black mb-2 italic underline text-white">Contact Admin</h2>
+                        <p class="text-xs mb-4">Chat with Leohafru1 for support & payments.</p>
+                        <a href="https://t.me/Leohafru1" class="bg-white text-green-600 px-8 py-2 rounded-xl font-bold text-xs inline-block">TELEGRAM</a>
                     </div>
-                </div>`;
+                    <div class="bg-[#161e2d] p-6 rounded-3xl border border-slate-800 text-center">
+                        <p class="text-xs text-gray-400 uppercase font-bold mb-2">Your ID</p>
+                        <p class="text-xl font-mono text-green-500">${localStorage.getItem('user_phone')}</p>
+                    </div>
+                `;
             } else if(page === 'task') {
-                content.innerHTML = `<h2 class="text-lg font-black mb-6 uppercase tracking-widest text-green-500">Live Tasks (18)</h2>
-                <div class="grid grid-cols-1 gap-3">
-                    ${renderTask(1, 0.005)} ${renderTask(2, 0.005)} ${renderTask(3, 0.004)} ${renderTask(4, 0.005)}
-                    ${renderTask(5, 0.006)} ${renderTask(6, 0.005)} ${renderTask(7, 0.004)} ${renderTask(8, 0.003)}
-                    ${renderTask(9, 0.005)} ${renderTask(10, 0.005)} ${renderTask(11, 0.004)} ${renderTask(12, 0.005)}
-                    ${renderTask(13, 0.005)} ${renderTask(14, 0.006)} ${renderTask(15, 0.005)} ${renderTask(16, 0.004)}
-                    ${renderTask(17, 0.005)} ${renderTask(18, 0.010)}
-                </div>`;
-            } else if(page === 'withdraw') {
+                let taskList = "";
+                for(let i=1; i<=18; i++) {
+                    taskList += renderTask(i, 0.005);
+                }
+                content.innerHTML = `<h2 class="text-xl font-black mb-6 text-green-500">AVAILABLE TASKS (18)</h2><div class="space-y-3">${taskList}</div>`;
+            } else if(page === 'game') {
+                content.innerHTML = `<div class="text-center py-20 text-gray-500"><i class="fas fa-gamepad text-6xl mb-4"></i><p>Games Opening Soon!</p></div>`;
+            } else if(page === 'wallet') {
                 content.innerHTML = `
-                <div class="bg-[#161e2d] p-8 rounded-3xl border border-slate-800">
-                    <h3 class="font-black text-xl mb-6">Cash Out to Leohafru1</h3>
-                    <input type="text" placeholder="Enter Bank/Telebirr Details" class="w-full p-4 rounded-2xl bg-[#0b0f1a] border border-slate-700 outline-none">
-                    <button onclick="alert('Min withdraw is $0.50')" class="w-full bg-green-600 py-4 rounded-2xl font-black mt-4">REDEEM NOW</button>
-                </div>`;
-            } else {
-                content.innerHTML = `<div class="text-center py-20 text-gray-500">Coming Soon...</div>`;
+                    <div class="bg-[#161e2d] p-8 rounded-3xl border border-slate-800">
+                        <h3 class="text-xl font-black mb-6">Withdraw Funds</h3>
+                        <div class="space-y-4">
+                            <div class="bg-[#0b0f1a] p-4 rounded-xl border border-slate-700 flex justify-between"><span>Telebirr</span><i class="fas fa-check-circle text-green-500"></i></div>
+                            <div class="bg-[#0b0f1a] p-4 rounded-xl border border-slate-700 flex justify-between opacity-50"><span>Bank Transfer</span><i class="fas fa-university text-blue-400"></i></div>
+                            <input type="text" placeholder="Account Number" class="w-full p-4 rounded-xl bg-[#0b0f1a] border border-slate-700 mt-2 outline-none">
+                            <button onclick="alert('Min balance $0.50 required')" class="w-full bg-green-600 py-4 rounded-xl font-black mt-4 shadow-lg active:scale-95">WITHDRAW NOW</button>
+                        </div>
+                    </div>
+                `;
             }
+            updateUI();
         }
 
         function renderTask(id, pay) {
             return `
-            <div onclick="triggerAd(${pay})" class="bg-[#161e2d] p-4 rounded-2xl flex justify-between items-center border border-slate-800 active:scale-95 transition-all cursor-pointer">
-                <div><p class="font-black text-sm">Task #${id}</p><p class="text-[10px] text-green-500 font-bold">Reward: $${pay}</p></div>
-                <i class="fas fa-play text-green-500"></i>
+            <div onclick="showAd(${pay})" class="bg-[#161e2d] p-4 rounded-2xl flex justify-between items-center border border-slate-800 active:bg-slate-700 transition-all cursor-pointer">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-[#0b0f1a] rounded-xl flex items-center justify-center text-green-500"><i class="fas fa-play"></i></div>
+                    <div><p class="font-black text-sm uppercase">Task #${id}</p><p class="text-[10px] text-green-500">Reward: $${pay}</p></div>
+                </div>
+                <button class="bg-slate-800 text-[10px] px-3 py-1 rounded-lg border border-slate-700">START</button>
             </div>`;
         }
 
-        function triggerAd(amount) {
-            alert("Loading Video Ad... Please wait 30 seconds to earn $" + amount);
+        function showAd(amount) {
+            // Your Ad Unit ID: ca-app-pub-6423416979717513/8315667035
+            alert("Loading Video Ad... Wait 30s to earn $" + amount);
             balance += amount;
             updateUI();
         }
 
         function updateUI() {
             document.getElementById('balance').innerText = `$${balance.toFixed(3)}`;
-            localStorage.setItem('global_bal', balance);
+            localStorage.setItem('ethio_bal', balance);
         }
     </script>
 </body>
