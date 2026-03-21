@@ -1,149 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethio Job - Professional Coin System</title>
+    <title>Ethio Job Finder - v16</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-6423416979717513" crossorigin="anonymous"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700;900&display=swap');
+        body { font-family: 'Noto Sans Ethiopic', sans-serif; }
         .page { display: none; }
-        .page-active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .nav-btn.active { color: #22c55e; }
+        .page-active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body class="bg-[#0b0f1a] text-white font-sans">
+<body class="bg-[#0b0f1a] text-white">
 
-    <div class="p-6 bg-[#161e2d] border-b border-slate-800 sticky top-0 z-50 flex justify-between items-center shadow-xl">
-        <div>
-            <h1 id="usdLabel" class="text-3xl font-black text-green-500">$0.000</h1>
-            <p id="coinLabel" class="text-xs text-yellow-500 font-bold"><i class="fas fa-coins mr-1"></i> 0 Coins</p>
-        </div>
-        <div class="flex gap-2">
-            <button onclick="showPage('shop')" class="bg-yellow-600 text-[10px] px-3 py-2 rounded-xl font-black shadow-lg">BUY COINS</button>
-            <a href="https://t.me/Leohafru1" class="w-10 h-10 bg-blue-500/10 text-blue-500 rounded-xl flex items-center justify-center border border-blue-500/20"><i class="fas fa-headset"></i></a>
-        </div>
-    </div>
-
-    <div id="mainContent" class="p-5 pb-32">
+    <div class="max-w-md mx-auto min-h-screen relative pb-24">
         
-        <div id="homePage" class="page page-active space-y-4">
-            <h2 class="text-lg font-black text-green-500 uppercase italic px-2 tracking-widest">Available Tasks</h2>
-            <div onclick="watchVideoAd(10)" class="bg-[#161e2d] p-5 rounded-2xl border border-slate-800 flex justify-between items-center active:scale-95 transition">
-                <div class="flex items-center gap-4"><i class="fas fa-play-circle text-2xl text-red-500"></i><div><p class="font-bold">Watch Video Ad</p><p class="text-[10px] text-yellow-500">+10 Coins</p></div></div>
-                <i class="fas fa-chevron-right text-gray-700"></i>
+        <div class="p-6 bg-[#161e2d] flex justify-between items-center sticky top-0 z-40 border-b border-slate-800">
+            <div>
+                <p class="text-[10px] text-green-500 font-bold uppercase mb-1">ጠቅላላ ሂሳብ</p>
+                <h1 id="etbBal" class="text-3xl font-black text-white">0.00 ብር</h1>
+                <p id="coinCount" class="text-xs text-yellow-500 font-bold mt-1"><i class="fas fa-coins mr-1"></i> 0 ኮይኖች</p>
             </div>
+            <div class="flex gap-2">
+                <button onclick="openShop()" class="bg-yellow-600 px-3 py-2 rounded-xl text-[10px] font-black shadow-lg">ኮይን ግዛ</button>
+                <a href="https://t.me/Leohafru1" class="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-700 text-blue-400">
+                    <i class="fas fa-headset"></i>
+                </a>
+            </div>
+        </div>
+
+        <div id="homePage" class="page page-active p-5 space-y-4">
+            <h2 class="text-sm font-bold text-gray-400 mb-4 px-1 italic underline decoration-green-500 underline-offset-8">የእለቱ ስራዎች</h2>
             
-            <div class="bg-[#161e2d] p-8 rounded-[2.5rem] border border-slate-800 text-center">
-                <h3 class="text-xl font-black mb-6">Lucky Spin</h3>
-                <div id="wheel" class="w-40 h-40 border-8 border-slate-700 rounded-full mx-auto mb-6 flex items-center justify-center bg-gradient-to-br from-green-900 to-slate-800 shadow-2xl">
-                    <i class="fas fa-star text-3xl text-yellow-500"></i>
+            <div onclick="getReward(10, 0.50)" class="bg-[#161e2d] p-5 rounded-2xl border border-slate-800 flex justify-between items-center active:scale-95 transition">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center shadow-inner"><i class="fas fa-play text-xl"></i></div>
+                    <div><p class="font-bold text-sm">ቪዲዮ ይመልከቱ</p><p class="text-[10px] text-yellow-500">+10 ኮይን / +0.50 ብር</p></div>
                 </div>
-                <p class="text-[10px] text-gray-500 mb-4 italic">Cost: 20 Coins per Spin</p>
-                <button onclick="playSpin()" class="bg-yellow-600 w-full py-4 rounded-2xl font-black shadow-lg active:scale-95 transition">SPIN & WIN USD</button>
+                <i class="fas fa-chevron-right text-slate-700"></i>
             </div>
         </div>
 
-        <div id="shopPage" class="page space-y-4">
-            <div class="bg-gradient-to-br from-blue-600 to-indigo-800 p-8 rounded-[2.5rem] shadow-2xl text-center">
-                <i class="fas fa-shopping-cart text-4xl mb-4"></i>
-                <h2 class="text-2xl font-black mb-2 uppercase">Buy Coins</h2>
-                <p class="text-sm opacity-90 mb-6 italic">Boost your balance now!</p>
-                
-                <div class="bg-white/10 p-4 rounded-2xl border border-white/20 mb-6">
-                    <p class="text-xs uppercase font-bold text-yellow-400 mb-1">Price Offer</p>
-                    <p class="text-xl font-black">10,000 Coins = 100 ETB</p>
+        <div id="walletPage" class="page p-5">
+            <div class="bg-[#161e2d] p-8 rounded-[2.5rem] border border-slate-800 shadow-2xl">
+                <h3 class="text-xl font-black mb-8 text-center tracking-tighter">ገንዘብ ማውጫ</h3>
+                <div class="space-y-3 mb-8">
+                    <div class="bg-green-500/10 p-5 rounded-2xl border border-green-500/20 flex items-center gap-4"><i class="fas fa-mobile-alt text-green-500 text-xl"></i><span class="font-bold">ቴሌብር (Telebirr)</span></div>
+                    <div class="bg-blue-500/10 p-5 rounded-2xl border border-blue-500/20 flex items-center gap-4"><i class="fas fa-university text-blue-500 text-xl"></i><span class="font-bold">የኢትዮጵያ ንግድ ባንክ</span></div>
+                </div>
+                <input id="accNo" type="text" placeholder="አካውንት ወይም ስልክ ቁጥር" class="w-full p-5 rounded-2xl bg-[#0b0f1a] border border-slate-700 mb-6 outline-none text-green-500 font-bold text-center">
+                <button onclick="sendRequest()" class="w-full bg-green-600 py-5 rounded-2xl font-black shadow-lg shadow-green-900/40">ገንዘብ አውጣ</button>
+                <p class="text-[10px] text-slate-500 mt-6 text-center italic">ዝቅተኛው የክፍያ መጠን፡ 50.00 ብር</p>
+            </div>
+        </div>
+
+        <div id="shopModal" class="fixed inset-0 z-50 bg-[#0b0f1a] hidden flex flex-col p-6 overflow-y-auto">
+            <div class="flex justify-end mb-4">
+                <button onclick="closeShop()" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center border border-white/20 text-white shadow-xl active:scale-75">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <div class="bg-gradient-to-b from-blue-700 to-blue-900 rounded-[3rem] p-10 flex flex-col items-center text-center shadow-2xl border border-blue-400/20">
+                <div class="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center mb-6 shadow-inner"><i class="fas fa-shopping-cart text-4xl"></i></div>
+                <h2 class="text-3xl font-black mb-2 italic">ኮይን ይግዙ</h2>
+                <p class="text-xs mb-8 opacity-70">ሂሳብዎን አሁን ያሳድጉ!</p>
+
+                <div class="w-full bg-black/20 p-6 rounded-3xl border border-white/10 mb-8">
+                    <p class="text-[10px] font-black uppercase text-yellow-400 mb-2 tracking-widest">ታላቅ ቅናሽ</p>
+                    <p class="text-2xl font-black tracking-tight">10,000 ኮይን = 100 ብር</p>
                 </div>
 
-                <div class="bg-black/30 p-5 rounded-2xl text-left mb-6 space-y-3">
-                    <p class="text-[11px] font-bold text-gray-300 uppercase tracking-widest">How to pay:</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs">Telebirr:</span>
-                        <span class="font-mono font-bold text-green-400 select-all underline text-lg">0993053753</span>
+                <div class="w-full bg-black/40 p-6 rounded-3xl text-left space-y-4 mb-8">
+                    <p class="text-[11px] font-black uppercase text-slate-400">እንዴት ይከፈላል?</p>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] text-slate-400 mb-1">ቴሌብር ቁጥር፦</span>
+                        <span class="text-2xl font-mono font-bold text-green-400 underline decoration-2 underline-offset-4">0993053753</span>
                     </div>
-                    <p class="text-[10px] text-gray-400 mt-2 italic">* After payment, send screenshot to Leohafru1</p>
+                    <p class="text-[9px] text-slate-300 italic">* ከከፈሉ በኋላ የከፈሉበትን ደረሰኝ (Screenshot) ለ Leohafru1 ይላኩ።</p>
                 </div>
 
-                <a href="https://t.me/Leohafru1" class="w-full bg-white text-blue-800 py-4 rounded-2xl font-black block shadow-xl active:scale-95 transition">SEND SCREENSHOT</a>
+                <a href="https://t.me/Leohafru1" class="w-full bg-white text-blue-800 py-5 rounded-2xl font-black shadow-2xl active:scale-95 transition-transform uppercase tracking-tighter">
+                    ደረሰኝ ለመላክ እዚህ ይጫኑ
+                </a>
             </div>
-            <button onclick="showPage('home')" class="w-full py-4 text-gray-500 font-bold text-xs uppercase tracking-widest underline">Back to Home</button>
         </div>
 
-        <div id="walletPage" class="page">
-            <div class="bg-[#161e2d] p-8 rounded-[2.5rem] border border-slate-800">
-                <h3 class="text-xl font-black mb-6">Withdraw USD</h3>
-                <input id="withAcc" type="text" placeholder="Bank/Telebirr Details" class="w-full p-4 rounded-2xl bg-[#0b0f1a] border border-slate-700 mb-4 outline-none text-green-500 font-bold">
-                <button onclick="requestPayment()" class="w-full bg-green-600 py-4 rounded-2xl font-black shadow-lg">REQUEST WITHDRAW</button>
-                <p class="text-[10px] text-gray-500 mt-6 text-center italic">Min. Withdraw: $0.50</p>
-            </div>
-        </div>
+        <nav class="fixed bottom-6 left-6 right-6 bg-[#161e2d] border border-slate-800 rounded-3xl flex justify-around py-4 shadow-2xl z-40 backdrop-blur-md bg-opacity-90">
+            <button onclick="nav('home')" class="flex flex-col items-center gap-1 text-green-500"><i class="fas fa-briefcase"></i><span class="text-[10px] font-bold">ስራ</span></button>
+            <button onclick="openShop()" class="flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-shopping-basket"></i><span class="text-[10px] font-bold">ግዢ</span></button>
+            <button onclick="nav('wallet')" class="flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-wallet"></i><span class="text-[10px] font-bold">ኪስ ቦርሳ</span></button>
+        </nav>
     </div>
-
-    <nav class="fixed bottom-4 left-4 right-4 bg-[#161e2d] border border-slate-800 flex justify-around py-3 rounded-[2rem] shadow-2xl z-50">
-        <button onclick="showPage('home', this)" class="nav-btn active flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-bolt"></i><span class="text-[9px] font-bold">Earn</span></button>
-        <button onclick="showPage('shop', this)" class="nav-btn flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-store"></i><span class="text-[9px] font-bold">Shop</span></button>
-        <button onclick="showPage('wallet', this)" class="nav-btn flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-wallet"></i><span class="text-[9px] font-bold">Wallet</span></button>
-    </nav>
 
     <script>
-        let usd = parseFloat(localStorage.getItem('ej_usd')) || 0.00;
-        let coins = parseInt(localStorage.getItem('ej_coins')) || 0;
+        let balance = parseFloat(localStorage.getItem('ethio_v16_bal')) || 0.00;
+        let coins = parseInt(localStorage.getItem('ethio_v16_coins')) || 0;
 
         function updateUI() {
-            document.getElementById('usdLabel').innerText = "$" + usd.toFixed(3);
-            document.getElementById('coinLabel').innerHTML = `<i class="fas fa-coins mr-1"></i> ${coins.toLocaleString()} Coins`;
-            localStorage.setItem('ej_usd', usd);
-            localStorage.setItem('ej_coins', coins);
+            document.getElementById('etbBal').innerText = balance.toFixed(2) + " ብር";
+            document.getElementById('coinCount').innerHTML = `<i class="fas fa-coins mr-1"></i> ${coins.toLocaleString()} ኮይኖች`;
+            localStorage.setItem('ethio_v16_bal', balance);
+            localStorage.setItem('ethio_v16_coins', coins);
         }
 
-        function showPage(pageId, btn) {
+        function openShop() { document.getElementById('shopModal').classList.remove('hidden'); }
+        function closeShop() { document.getElementById('shopModal').classList.add('hidden'); }
+
+        function nav(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('page-active'));
             document.getElementById(pageId + 'Page').classList.add('page-active');
-            if(btn) {
-                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            }
         }
 
-        function watchVideoAd(reward) {
-            alert("Loading Video Ad... Please wait 30 seconds.");
+        function getReward(c, b) {
+            alert("ቪዲዮው እስኪጨርስ ይጠብቁ...");
             setTimeout(() => {
-                coins += reward;
+                coins += c; balance += b;
                 updateUI();
-                alert("Earned: " + reward + " Coins!");
-            }, 3000);
+                alert("ተሳክቷል! " + b + " ብር እና " + c + " ኮይን አግኝተዋል።");
+            }, 2000);
         }
 
-        function playSpin() {
-            if (coins < 20) { 
-                if(confirm("Not enough coins! Would you like to buy 10,000 coins for 100 ETB?")) {
-                    showPage('shop');
-                }
-                return; 
-            }
-            coins -= 20;
-            const wheel = document.getElementById('wheel');
-            wheel.style.transition = "transform 2s cubic-bezier(0.1, 0.7, 0.1, 1)";
-            wheel.style.transform = "rotate(" + (1800 + Math.random() * 360) + "deg)";
-            
-            setTimeout(() => {
-                wheel.style.transition = "none";
-                wheel.style.transform = "rotate(0deg)";
-                let win = Math.random() > 0.8 ? 0.05 : 0.005;
-                usd += win;
-                updateUI();
-                alert("Winner! You got $" + win);
-            }, 2100);
-        }
-
-        function requestPayment() {
-            let acc = document.getElementById('withAcc').value;
-            if(usd < 0.50) { alert("Min balance $0.50 required!"); return; }
-            if(acc.length < 10) { alert("Enter valid account details!"); return; }
-            window.location.href = `https://t.me/Leohafru1?text=Payment Request:%0AAcc: ${acc}%0AAmt: $${usd.toFixed(3)}`;
-            usd = 0; updateUI();
+        function sendRequest() {
+            let acc = document.getElementById('accNo').value;
+            if(balance < 50) { alert("ዝቅተኛው የክፍያ መጠን 50.00 ብር ነው።"); return; }
+            if(acc.length < 10) { alert("ትክክለኛ ስልክ ወይም አካውንት ያስገቡ!"); return; }
+            window.location.href = `https://t.me/Leohafru1?text=የክፍያ ጥያቄ%0Aአካውንት: ${acc}%0Aመጠን: ${balance.toFixed(2)} ብር`;
+            balance = 0; updateUI();
         }
 
         updateUI();
