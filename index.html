@@ -1,14 +1,44 @@
-# Ethio Job Pro $ (Version 2.0)
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethio Job Pro $</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
 
-A global micro-tasking application with secure authentication and multi-channel payouts.
+    <div id="loginPage" class="flex flex-col items-center justify-center min-h-screen p-6">
+        <h1 class="text-3xl font-bold mb-6 text-green-500">Ethio Job Pro $</h1>
+        <input type="email" placeholder="Email or Phone" class="w-full p-3 mb-4 rounded bg-gray-800 border border-gray-700">
+        <input type="password" placeholder="Password" class="w-full p-3 mb-6 rounded bg-gray-800 border border-gray-700">
+        <button onclick="showHome()" class="w-full bg-green-600 p-3 rounded font-bold">Login</button>
+    </div>
 
-## New Features
-- **Dual Auth:** Support for Phone (OTP) and Email/Password login.
-- **Global Payouts:** Integrated fields for Telebirr, PayPal, and USDT.
-- **Security:** Automatic VPN detection and device fingerprinting.
-- **Referral System:** Automated bonus tracking for user invitations.
+    <div id="homePage" class="hidden p-4">
+        <div class="bg-white text-black p-6 rounded-2xl text-center mb-6">
+            <p class="text-gray-500">የእርስዎ የዶላር ገቢ</p>
+            <h1 class="text-5xl font-bold text-green-600">$0.00</h1>
+        </div>
 
-## Tech Stack
-- **Frontend:** Flutter / React Native
-- **Backend:** Firebase / Node.js
-- **Database:** Firestore / MongoDB
+        <h2 class="text-xl mb-4">የዛሬ ምርጥ ስራዎች 🔥</h2>
+        <div class="space-y-4">
+            <div class="bg-gray-800 p-4 rounded-xl flex justify-between items-center border border-gray-700">
+                <div><p>ቪዲዮ አይተው ይከፈሉ</p><p class="text-green-500">+$0.05</p></div>
+                <button class="bg-green-600 px-4 py-2 rounded">ስራ</button>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-xl flex justify-between items-center border border-gray-700">
+                <div><p>ጓደኛ ይጋብዙ (Referral)</p><p class="text-green-500">+$0.10</p></div>
+                <button class="bg-green-600 px-4 py-2 rounded">ጋብዝ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showHome() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('homePage').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
