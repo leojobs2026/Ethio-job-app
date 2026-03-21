@@ -3,88 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethio Job Pro $</title>
+    <title>Ethio Job Pro v2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .nav-active { color: #22c55e; border-top: 2px solid #22c55e; }
+        .task-card:active { transform: scale(0.98); }
+    </style>
 </head>
-<body class="bg-[#0f172a] text-white font-sans">
+<body class="bg-[#0f172a] text-white font-sans selection:bg-green-500">
 
-    <div id="mainApp">
-        <div class="bg-white m-4 p-8 rounded-3xl text-center shadow-xl">
-            <p class="text-gray-500 font-bold italic">ያጠራቀሙት ገቢ</p>
-            <h1 id="balance" class="text-6xl font-black text-green-600">$0.00</h1>
-            <p class="text-[10px] text-gray-400 mt-2">በቴሌብር ወይም በባንክ ይከፈልዎታል</p>
+    <div id="mainApp" class="max-w-md mx-auto min-h-screen pb-24">
+        <div class="bg-slate-800/50 backdrop-blur-md sticky top-0 z-10 p-6 border-b border-slate-700">
+            <p class="text-gray-400 text-xs uppercase tracking-widest font-bold">የእርስዎ የሒሳብ ቋት</p>
+            <h1 id="balance" class="text-5xl font-black text-green-500 mt-1">$0.000</h1>
         </div>
 
-        <div id="contentArea" class="px-6 pb-24"></div>
+        <div id="contentArea" class="px-5 py-6"></div>
 
-        <div class="fixed bottom-0 w-full bg-[#1e293b] border-t border-gray-700 flex justify-around p-4 shadow-2xl">
-            <button onclick="navigate('home')" class="nav-btn flex flex-col items-center text-green-500"><i class="fas fa-home"></i><span class="text-xs">Home</span></button>
-            <button onclick="navigate('withdraw')" class="nav-btn flex flex-col items-center"><i class="fas fa-wallet"></i><span class="text-xs">Withdraw</span></button>
-            <button onclick="navigate('profile')" class="nav-btn flex flex-col items-center"><i class="fas fa-user"></i><span class="text-xs">Profile</span></button>
-        </div>
+        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-900 border-t border-slate-800 flex justify-around p-3 shadow-2xl">
+            <button onclick="navigate('home')" class="nav-btn flex flex-col items-center gap-1 text-gray-400 transition-all">
+                <i class="fas fa-home text-xl"></i><span class="text-[10px]">መነሻ</span>
+            </button>
+            <button onclick="navigate('withdraw')" class="nav-btn flex flex-col items-center gap-1 text-gray-400 transition-all">
+                <i class="fas fa-wallet text-xl"></i><span class="text-[10px]">ወጪ ማድረጊያ</span>
+            </button>
+            <button onclick="navigate('profile')" class="nav-btn flex flex-col items-center gap-1 text-gray-400 transition-all">
+                <i class="fas fa-user-circle text-xl"></i><span class="text-[10px]">መገለጫ</span>
+            </button>
+        </nav>
     </div>
 
     <script>
-        let currentBalance = 0.00;
+        // ፕሮፌሽናል ዳታ አያያዝ
+        let balance = parseFloat(localStorage.getItem('ethio_balance')) || 0.00;
+        
+        function updateUI() {
+            document.getElementById('balance').innerText = `$${balance.toFixed(3)}`;
+            localStorage.setItem('ethio_balance', balance);
+        }
 
         function navigate(page) {
             const content = document.getElementById('contentArea');
-            // Reset nav colors
+            // የኔቪጌሽን ቀለም መቀየር
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('text-green-500'));
             
             if(page === 'home') {
                 content.innerHTML = `
-                    <h2 class="text-xl font-bold mb-4 mt-4">የዛሬ ስራዎች</h2>
+                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2"><i class="fas fa-fire text-orange-500"></i> የዛሬ ምርጥ ስራዎች</h2>
                     <div class="space-y-4">
-                        ${renderTask("አዲስ ሙዚቃ ይዩ", 0.02, "https://www.youtube.com/shorts/3i9s1H2pYy4")}
-                        ${renderTask("ቲክቶክ ቪዲዮ", 0.02, "https://www.youtube.com/shorts/q7n65mZJd2A")}
-                        <div class="bg-blue-900/40 p-5 rounded-2xl border border-blue-500 flex justify-between items-center">
-                            <div><p class="font-bold">ጓደኛ ጋብዙ</p><p class="text-blue-400">+$0.10</p></div>
-                            <button onclick="alert('የመጋበዣ ኮድዎ ተቀድቷል!')" class="bg-blue-600 px-4 py-2 rounded-lg text-sm">ኮድ ቅዳ</button>
+                        ${renderTask("አዲስ ሙዚቃ ቪዲዮ", 0.005, "YouTube")}
+                        ${renderTask("ቲክቶክ ቪዲዮ", 0.005, "TikTok")}
+                        <div class="bg-blue-600/20 border border-blue-500/50 p-4 rounded-2xl flex justify-between items-center">
+                            <div><p class="font-bold text-sm">ጓደኛ ይጋብዙ (Referral)</p><p class="text-blue-400 text-xs">+$0.05 ያግኙ</p></div>
+                            <button onclick="alert('ሊንክ ኮፒ ተደርጓል!')" class="bg-blue-600 px-4 py-2 rounded-xl text-xs font-bold shadow-lg shadow-blue-900/40">ኮፒ አድርግ</button>
                         </div>
-                    </div>`;
+                    </div>
+                `;
             } else if(page === 'withdraw') {
                 content.innerHTML = `
-                    <h2 class="text-xl font-bold mb-4 mt-4 text-green-500">ብር ማውጫ (Withdraw)</h2>
-                    <div class="bg-[#1e293b] p-6 rounded-2xl border border-gray-700">
-                        <p class="text-sm text-red-400 mb-4 font-bold tracking-tight">ዝቅተኛ ክፍያ $0.50</p>
-                        <select class="w-full p-4 mb-4 rounded-xl bg-gray-900 border border-gray-700 text-white outline-none focus:border-green-500">
+                    <h2 class="text-lg font-bold mb-4 text-green-500">ገንዘብ ማውጫ (Withdraw)</h2>
+                    <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 space-y-4">
+                        <p class="text-xs text-red-400 font-bold bg-red-400/10 p-2 rounded-lg italic">ዝቅተኛ የክፍያ መጠን $0.50</p>
+                        <select class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-sm focus:border-green-500 outline-none">
                             <option>ቴሌብር (Telebirr)</option>
-                            <option>አቢሲኒያ ባንክ (BOA)</option>
+                            <option>አቢሲኒያ ባንክ</option>
                             <option>ንግድ ባንክ (CBE)</option>
-                            <option>አዋሽ ባንክ</option>
                         </select>
-                        <input type="tel" placeholder="የቴሌብር ወይም የባንክ ስልክ ቁጥር" class="w-full p-4 mb-4 rounded-xl bg-gray-900 border border-gray-700 outline-none focus:border-green-500">
-                        <input type="text" placeholder="ሙሉ ስም" class="w-full p-4 mb-6 rounded-xl bg-gray-900 border border-gray-700 outline-none focus:border-green-500">
-                        <button onclick="alert('ጥያቄዎ ተልኳል! በ 24 ሰዓት ውስጥ ይከፈልዎታል')" class="w-full bg-green-600 p-4 rounded-xl font-bold text-lg hover:bg-green-700 transition">ክፍያ ይጠይቁ</button>
-                    </div>`;
-            } else if(page === 'profile') {
-                content.innerHTML = `
-                    <div class="text-center mt-10">
-                        <div class="w-24 h-24 bg-gray-800 rounded-full mx-auto flex items-center justify-center text-4xl border-2 border-green-500 mb-4"><i class="fas fa-user"></i></div>
-                        <h2 class="text-2xl font-black">@Leohaftu1</h2>
-                        <p class="text-gray-400 mt-2">የእርስዎ መለያ ኮድ: ETH-4491</p>
-                        <button onclick="location.reload()" class="mt-10 text-red-500 border-2 border-red-500 px-10 py-3 rounded-full font-bold hover:bg-red-500 hover:text-white transition">መተግበሪያውን አድስ</button>
-                    </div>`;
+                        <input type="tel" placeholder="የስልክ ቁጥር" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-sm focus:border-green-500 outline-none">
+                        <button onclick="processWithdraw()" class="w-full bg-green-600 hover:bg-green-500 py-4 rounded-xl font-black transition-all shadow-lg shadow-green-900/20">ክፍያ ይጠይቁ</button>
+                    </div>
+                `;
             }
+            updateUI();
         }
 
-        function renderTask(title, pay, link) {
+        function renderTask(title, pay, type) {
             return `
-                <div class="bg-[#1e293b] p-5 rounded-2xl flex justify-between items-center border border-gray-700">
-                    <div><p class="font-medium">${title}</p><p class="text-green-400 font-bold">+$${pay}</p></div>
-                    <button onclick="doTask('${link}', ${pay})" class="bg-green-600 px-6 py-2 rounded-lg font-bold shadow-md active:scale-95 transition">ስራ</button>
+                <div class="task-card bg-slate-800 p-4 rounded-2xl flex justify-between items-center border border-slate-700 hover:border-slate-500 transition-all cursor-pointer" onclick="completeTask(${pay})">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center text-green-500">
+                            <i class="fas fa-${type === 'YouTube' ? 'play' : 'video'}"></i>
+                        </div>
+                        <div><p class="font-bold text-sm text-gray-200">${title}</p><p class="text-green-500 text-xs font-mono">+$${pay}</p></div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-600"></i>
                 </div>`;
         }
 
-        function doTask(link, pay) {
-            window.open(link, '_blank');
-            currentBalance += pay;
-            document.getElementById('balance').innerText = '$' + currentBalance.toFixed(2);
+        function completeTask(amount) {
+            // እዚህ ጋር ነው ማስታወቂያውን የምናስገባው
+            alert("ማስታወቂያውን አይተው ሲጨርሱ ክፍያው ይገባል!");
+            balance += amount;
+            updateUI();
         }
 
-        // Initialize Home
+        function processWithdraw() {
+            if(balance < 0.50) {
+                alert("ይቅርታ! ገና $0.50 አልሞሉም።");
+            } else {
+                alert("ጥያቄዎ ተልኳል! በ 24 ሰዓት ውስጥ ይከፈልዎታል።");
+            }
+        }
+
         navigate('home');
     </script>
 </body>
