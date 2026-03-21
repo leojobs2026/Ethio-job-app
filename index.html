@@ -1,1 +1,121 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethio Job Pro - Earn Money</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root { --primary: #0088cc; --dark: #1a1a1a; --success: #27ae60; --bg: #f4f7f6; }
+        body { font-family: sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
+        .top-nav { background: var(--dark); color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; }
+        .balance-card { background: white; margin: -20px 20px 15px; padding: 25px; border-radius: 15px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 5px solid var(--primary); }
+        .balance-amount { font-size: 2.5em; font-weight: 800; color: var(--primary); }
+        .page { display: none; padding: 15px; }
+        .page.active { display: block; }
+        .task-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn:disabled { background: #ccc; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #ddd; }
+        .nav-item { border: none; background: none; color: #888; font-size: 0.8em; }
+        .nav-item.active { color: var(--primary); font-weight: bold; }
+    </style>
+</head>
+<body>
 
+    <div class="top-nav"><b>ETHIO JOB PRO</b></div>
+    
+    <div class="balance-card">
+        <div style="color: #666;">የአሁኑ ቀሪ ሂሳብ</div>
+        <div class="balance-amount"><span id="main-bal">0.00</span> <small style="font-size: 0.4em;">ETB</small></div>
+    </div>
+
+    <div id="home" class="page active">
+        <h3>ትኩስ ስራዎች 🔥</h3>
+        <div id="home-tasks"></div>
+    </div>
+
+    <div id="withdraw" class="page">
+        <div style="background: white; padding: 20px; border-radius: 15px;">
+            <h3 style="text-align: center;">ገንዘብ ማውጫ</h3>
+            <p style="text-align: center; color: red;">ዝቅተኛው የክፍያ መጠን 150 ETB ነው።</p>
+            <input type="number" id="acc" placeholder="የቴሌብር ስልክ ቁጥር" style="width: 90%; padding: 12px; margin: 10px 0;">
+            <input type="text" id="name" placeholder="ሙሉ ስም" style="width: 90%; padding: 12px; margin: 10px 0;">
+            <button class="btn" style="width:100%; background: var(--success);" onclick="submitWithdraw()">ጥያቄ ላክ</button>
+        </div>
+    </div>
+
+    <div id="profile" class="page">
+        <div style="background: white; padding: 25px; border-radius: 15px; text-align: center;">
+            <h3>@Leohaftu1</h3>
+            <p>ለማስታወቂያ ያነጋግሩን</p>
+            <a href="https://t.me/Leohaftu1" style="text-decoration: none; color: var(--primary);">ቴሌግራም ክፈት</a>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="showPage('home', this)">🏠 Home</button>
+        <button class="nav-item" onclick="showPage('withdraw', this)">💸 Withdraw</button>
+        <button class="nav-item" onclick="showPage('profile', this)">👤 Profile</button>
+    </div>
+
+<script>
+    let balance = 0.00;
+    const botToken = "8638798872:AAGaKoLv9VSRRK3nI7UPx8iJc6byQ5L3tBc"; //
+    const chatId = "7821771120"; //
+
+    // ታስኮች - እዚህ ጋር ያሳጠርካቸውን 10 ሊንኮች አስገባ
+    const tasksData = [
+        {t: "ቪዲዮ 1 ማየት", r: 0.20, link: "https://shrinkme.io/your_link_1"},
+        {t: "ቪዲዮ 2 ማየት", r: 0.20, link: "https://shrinkme.io/your_link_2"},
+        {t: "ቪዲዮ 3 ማየት", r: 0.20, link: "https://shrinkme.io/your_link_3"},
+        {t: "ቲክቶክ ፎሎው", r: 1.00, link: "https://tiktok.com/@Leohaftu1"},
+        {t: "ቻናል መቀላቀል", r: 1.00, link: "https://t.me/EthioJobFinder"}
+    ];
+
+    function startTask(url, amt, btn) {
+        window.open(url, "_blank");
+        let timeLeft = 30; // 30 ሰከንድ መጠበቅ አለባቸው
+        btn.disabled = true;
+        
+        const countdown = setInterval(() => {
+            btn.innerText = `ቆይ (${timeLeft}s)`;
+            timeLeft--;
+            if (timeLeft < 0) {
+                clearInterval(countdown);
+                balance += amt;
+                document.getElementById('main-bal').innerText = balance.toFixed(2);
+                btn.innerText = "ተጠናቀቀ ✔️";
+                btn.style.background = "#ccc";
+            }
+        }, 1000);
+    }
+
+    function showPage(pageId, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function submitWithdraw() {
+        const acc = document.getElementById('acc').value;
+        const name = document.getElementById('name').value;
+        if(balance < 150) return alert("150 ETB አልሞላህም!");
+        if(acc && name) {
+            const msg = `💰 አዲስ ጥያቄ!\n👤 ስም: ${name}\n📱 ቁጥር: ${acc}\n💵 መጠን: ${balance.toFixed(2)} ETB`;
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}`);
+            alert("ጥያቄዎ ተልኳል!");
+            balance = 0;
+            document.getElementById('main-bal').innerText = "0.00";
+        }
+    }
+
+    tasksData.forEach(task => {
+        const html = `<div class="task-card"><div><h4>${task.t}</h4><span>+${task.r.toFixed(2)} ETB</span></div>
+        <button class="btn" onclick="startTask('${task.link}', ${task.r}, this)">ስራ</button></div>`;
+        document.getElementById('home-tasks').innerHTML += html;
+    });
+</script>
+</body>
+</html>
