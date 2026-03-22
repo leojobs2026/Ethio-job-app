@@ -1,30 +1,72 @@
-DOCTYPE 
-                `;
-            }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethio-Job Premium Bot</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; margin: 0; }
+        .header { padding: 20px; background: #1e293b; border-bottom: 2px solid #3b82f6; }
+        .balance { font-size: 32px; margin: 20px 0; color: #fbbf24; }
+        .menu-bar { position: fixed; bottom: 0; width: 100%; display: flex; background: #1e293b; padding: 10px 0; }
+        .menu-item { flex: 1; font-size: 12px; cursor: pointer; }
+        .task-card { background: #1e293b; margin: 10px; padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; }
+        .btn { background: #3b82f6; border: none; padding: 8px 15px; color: white; border-radius: 5px; }
+        .spin-section { margin: 30px 0; padding: 20px; background: linear-gradient(45deg, #1e293b, #334155); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h3>Ethio-Job Global Bot</h3>
+        <p>Verified User: <span id="user-id">@User</span></p>
+    </div>
+
+    <div class="balance" id="points">0.00 PTS</div>
+
+    <div class="spin-section">
+        <h4>Luck Spin Wheel 🎡</h4>
+        <button class="btn" onclick="spinGame()">SPIN NOW</button>
+        <p id="spin-result"></p>
+    </div>
+
+    <div id="task-container" style="padding-bottom: 80px;">
+        <h4>Available Tasks</h4>
+        <div class="task-card">
+            <span>Follow our TikTok</span>
+            <button class="btn" onclick="doTask(100)">+100 PTS</button>
+        </div>
+        <div class="task-card">
+            <span>Watch V-Play Intro</span>
+            <button class="btn" onclick="doTask(150)">+150 PTS</button>
+        </div>
+        <div class="task-card">
+            <span>Contact @Leohaftu1</span>
+            <button class="btn" onclick="window.location.href='https://t.me/Leohaftu1'">Contact</button>
+        </div>
+        </div>
+
+    <div class="menu-bar">
+        <div class="menu-item" onclick="showTab('home')">🏠<br>Home</div>
+        <div class="menu-item" onclick="showTab('tasks')">📋<br>Tasks</div>
+        <div class="menu-item" onclick="showTab('games')">🎮<br>Games</div>
+        <div class="menu-item" onclick="showTab('withdraw')">💰<br>Withdraw</div>
+    </div>
+
+    <script>
+        let points = 0;
+        function doTask(amt) {
+            points += amt;
+            document.getElementById('points').innerText = points + ".00 PTS";
+            alert("Task Completed! Points Added.");
         }
 
-        function watchVideo() {
-            alert("ማስታወቂያ በመጫን ላይ...");
-            // እውነተኛው የAdMob ቪዲዮ እዚህ ነው የሚጠራው
-            setTimeout(() => {
-                coins += 10;
-                updateDisplay();
-                alert("እንኳን ደስ አለዎት! 10 ኮይን አግኝተዋል");
-            }, 3000);
+        function spinGame() {
+            let win = Math.floor(Math.random() * 500);
+            points += win;
+            document.getElementById('points').innerText = points + ".00 PTS";
+            document.getElementById('spin-result').innerText = "You won " + win + " PTS!";
         }
-
-        function playGame(cost, name) {
-            if(coins >= cost) {
-                coins -= cost;
-                updateDisplay();
-                // የዕድል ስሌት (50/50 ዕድል)
-                if(Math.random() > 0.7) {
-                    let win = cost * 2;
-                    coins += win;
-                    alert("አሸነፉ! " + win + " ኮይን ተጨመረልዎት!");
-                } else {
-                    alert("አልተሳካም! እንደገና ይሞክሩ።");
-                }
-                updateDisplay();
-            } else {
-                alert("በቂ ኮይን የለዎትም!");
+    </script>
+</body>
+</html>
