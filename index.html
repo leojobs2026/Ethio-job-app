@@ -3,252 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethio-Job Global</title>
+    <title>Ethio-Job Global Bot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --primary: #3b82f6; --bg: #0f172a; --card: #1e293b; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden; }
+        :root { --primary: #3b82f6; --bg: #0f172a; --card: #1e293b; --accent: #fbbf24; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; text-align: center; overflow-x: hidden; }
         
         /* Login Section */
-        #auth-page { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        input { width: 80%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: var(--card); color: white; border: 1px solid #334155; }
+        #auth-page { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        input { width: 85%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #334155; background: var(--card); color: white; font-size: 16px; }
         
-        /* Main UI */
-        .container { display: none; padding-bottom: 80px; }
-        .header { padding: 20px; text-align: center; background: var(--card); border-bottom: 3px solid var(--primary); }
-        .balance { font-size: 40px; font-weight: bold; color: #fbbf24; margin: 20px 0; }
+        /* Main Container */
+        .container { display: none; padding-bottom: 90px; }
+        .header { padding: 25px; background: var(--card); border-bottom: 3px solid var(--primary); margin-bottom: 20px; }
+        .balance { font-size: 45px; font-weight: bold; color: var(--accent); text-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
 
-        /* Spinning Wheel Style */
-        .wheel-container { position: relative; width: 250px; height: 250px; margin: 20px auto; }
-        #wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #fff; transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); background: conic-gradient(#3b82f6 0deg 90deg, #ef4444 90deg 180deg, #10b981 180deg 270deg, #f59e0b 270deg 360deg); }
-        .pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid white; z-index: 10; }
+        /* Real Spinning Wheel */
+        .wheel-box { position: relative; width: 280px; height: 280px; margin: 20px auto; }
+        #wheel { width: 100%; height: 100%; border-radius: 50%; border: 8px solid #fff; transition: transform 4s cubic-bezier(0.1, 0.7, 0.1, 1); 
+                 background: conic-gradient(#3b82f6 0% 12.5%, #ef4444 12.5% 25%, #10b981 25% 37.5%, #f59e0b 37.5% 50%, #8b5cf6 50% 62.5%, #ec4899 62.5% 75%, #06b6d4 75% 87.5%, #f97316 87.5% 100%); }
+        .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 35px solid white; z-index: 10; }
 
-        /* Navigation */
-        .menu-bar { position: fixed; bottom: 0; width: 100%; display: flex; background: var(--card); padding: 15px 0; box-shadow: 0 -5px 15px rgba(0,0,0,0.3); }
-        .menu-item { flex: 1; text-align: center; font-size: 12px; cursor: pointer; color: #94a3b8; }
-        .menu-item.active { color: var(--primary); font-weight: bold; }
+        /* Task Design */
+        .task-list { padding: 15px; text-align: left; }
+        .task-card { background: var(--card); margin-bottom: 12px; padding: 18px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 14px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 85%; font-size: 16px; transition: 0.3s; }
+        .btn-main:active { transform: scale(0.95); }
+        .task-btn { background: #3b82f6; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; }
 
-        .btn-main { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 80%; }
-        .task-card { background: var(--card); margin: 10px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+        /* Navigation Bar */
+        .menu-bar { position: fixed; bottom: 0; width: 100%; display: flex; background: var(--card); padding: 15px 0; border-top: 1px solid #334155; box-shadow: 0 -5px 20px rgba(0,0,0,0.5); }
+        .menu-item { flex: 1; font-size: 12px; color: #94a3b8; cursor: pointer; }
+        .menu-item.active { color: var(--primary); }
     </style>
 </head>
 <body>
 
     <div id="auth-page">
-        <h2>Welcome to Ethio-Job</h2>
-        <p>Enter Email or Phone to receive code</p>
-        <input type="text" id="contact" placeholder="Email or Phone number...">
-        <button class="btn-main" onclick="sendOTP()">Send Code</button>
-        <div id="otp-section" style="display:none; width: 100%; text-align: center;">
-            <input type="text" id="otp" placeholder="Enter 4-digit code">
-            <button class="btn-main" onclick="verifyOTP()">Verify & Start</button>
+        <h2 style="font-size: 28px;">Ethio-Job Premium</h2>
+        <p style="color: #94a3b8;">Enter Email or Phone to get code</p>
+        <input type="text" id="contact" placeholder="09... / Email">
+        <button class="btn-main" onclick="sendToBot()">Send Verification Code</button>
+        
+        <div id="otp-area" style="display:none; width: 100%; margin-top: 20px;">
+            <input type="text" id="otp-val" placeholder="Enter 4-digit code">
+            <button class="btn-main" style="background: #10b981;" onclick="checkCode()">Verify & Enter</button>
         </div>
+        <p style="margin-top: 20px; color: #64748b;">Support: @Leohaftu1</p>
     </div>
 
-    <div class="container" id="main-app">
+    <div class="container" id="app-body">
         <div class="header">
-            <h3>Ethio-Job Global Bot</h3>
-            <div class="balance" id="points">0 PTS</div>
+            <div class="balance" id="score">0 PTS</div>
+            <p>Welcome to Global Tasks</p>
         </div>
 
-        <div id="game-tab">
-            <h4>Luck Spin Wheel 🎡</h4>
-            <div class="wheel-container">
+        <div id="home-section">
+            <h3 style="color: var(--accent);">Luck Spin Wheel 🎡</h3>
+            <div class="wheel-box">
                 <div class="pointer"></div>
                 <div id="wheel"></div>
             </div>
-            <button class="btn-main" id="spin-btn" onclick="startSpin()">SPIN NOW</button>
-            <p id="status-msg"></p>
+            <button class="btn-main" id="spin-button" onclick="handleSpin()">SPIN NOW</button>
+            <p id="spin-msg" style="margin-top: 15px; font-weight: bold; height: 20px;"></p>
         </div>
 
-        <div id="task-tab" style="display:none;">
-            <h4>Available Tasks (15+)</h4>
-            <div class="task-card"><span>Follow TikTok</span><button onclick="addPoints(100)">+100</button></div>
-            <div class="task-card"><span>Watch V-Play</span><button onclick="addPoints(200)">+200</button></div>
-            <div class="task-card"><span>Join Channel</span><button onclick="addPoints(50)">+50</button></div>
-            <div class="task-card"><span>Contact @Leohaftu1</span><button onclick="window.location.href='https://t.me/Leohaftu1'">Contact</button></div>
+        <div id="task-section" style="display:none;">
+            <h3 style="margin-left: 20px;">Available Tasks (15+)</h3>
+            <div class="task-list" id="task-container">
+                </div>
         </div>
 
         <div class="menu-bar">
-            <div class="menu-item active" onclick="showTab('home')">🏠<br>Home</div>
-            <div class="menu-item" onclick="showTab('tasks')">📋<br>Tasks</div>
-            <div class="menu-item" onclick="showTab('games')">🎮<br>Games</div>
-            <div class="menu-item" onclick="showTab('withdraw')">💰<br>Withdraw</div>
+            <div class="menu-item active" onclick="switchTab('home')">🏠<br>Home</div>
+            <div class="menu-item" onclick="switchTab('tasks')">📋<br>Tasks</div>
+            <div class="menu-item" onclick="window.location.href='https://t.me/Leohaftu1'">👤<br>Admin</div>
+            <div class="menu-item" onclick="alert('Withdraw starts at 50,000 PTS')">💰<br>Withdraw</div>
         </div>
     </div>
 
     <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
         let balance = 0;
         let rotation = 0;
 
-        // 1. Auth Logic
-        function sendOTP() {
-            if(document.getElementById('contact').value.length > 5) {
-                document.getElementById('otp-section').style.display = 'block';
-                alert("Code sent to your contact!");
-            }
-        }
-        function verifyOTP() {
-            if(document.getElementById('otp').value === "1234") { // ለሙከራ ኮዱ 1234 ነው
-                document.getElementById('auth-page').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
-            } else { alert("Wrong code! Try 1234"); }
+        // 1. Send Data to Bot
+        function sendToBot() {
+            let input = document.getElementById('contact').value;
+            if(input.length > 5) {
+                tg.sendData("request_code:" + input);
+                document.getElementById('otp-area').style.display = 'block';
+                alert("ኮድ በቴሌግራም ቦቱ በኩል ተልኳል። ቦቱን ይዩ።");
+            } else { alert("Please enter valid info!"); }
         }
 
-        // 2. Spin Logic (Real Animation)
-        function startSpin() {
+        // 2. Check Code (Correct code is 1234)
+        function checkCode() {
+            let code = document.getElementById('otp-val').value;
+            if(code === "1234") {
+                document.getElementById('auth-page').style.display = 'none';
+                document.getElementById('app-body').style.display = 'block';
+                loadTasks();
+            } else { alert("Wrong code! Use 1234"); }
+        }
+
+        // 3. Real Spin Animation
+        function handleSpin() {
             const wheel = document.getElementById('wheel');
-            const btn = document.getElementById('spin-btn');
+            const btn = document.getElementById('spin-button');
             btn.disabled = true;
             
-            const extraDeg = Math.floor(Math.random() * 360) + 1440; // ቢያንስ 4 ዙር እንዲዞር
-            rotation += extraDeg;
+            let extra = Math.floor(Math.random() * 360) + 1800; // 5 full spins + random
+            rotation += extra;
             wheel.style.transform = `rotate(${rotation}deg)`;
 
             setTimeout(() => {
-                let win = Math.floor(Math.random() * 500) + 50;
+                let win = Math.floor(Math.random() * 800) + 50;
                 balance += win;
-                document.getElementById('points').innerText = balance + " PTS";
-                document.getElementById('status-msg').innerText = "You won " + win + " PTS!";
+                document.getElementById('score').innerText = balance + " PTS";
+                document.getElementById('spin-msg').innerText = "🎉 You Won " + win + " PTS!";
                 btn.disabled = false;
             }, 4000);
         }
 
-        // Tab Switching
-        function showTab(tab) {
-            document.getElementById('game-tab').style.display = (tab === 'home' || tab === 'games') ? 'block' : 'none';
-            document.getElementById('task-tab').style.display = (tab === 'tasks') ? 'block' : 'none';
+        // 4. Tab Switching
+        function switchTab(type) {
+            document.getElementById('home-section').style.display = (type === 'home') ? 'block' : 'none';
+            document.getElementById('task-section').style.display = (type === 'tasks') ? 'block' : 'none';
+            // Update active menu style
         }
 
-        function addPoints(pts) { balance += pts; document.getElementById('points').innerText = balance + " PTS"; alert("Points Added!"); }
+        // 5. Loading 15+ Tasks
+        function loadTasks() {
+            const container = document.getElementById('task-container');
+            const taskData = [
+                {n: "Follow TikTok", p: 500}, {n: "Join V-Play Channel", p: 300},
+                {n: "Watch YouTube Video", p: 400}, {n: "Invite 5 Friends", p: 1000},
+                {n: "Daily Bonus", p: 100}, {n: "Follow Instagram", p: 250},
+                {n: "Like Facebook Page", p: 200}, {n: "Subscribe YouTube", p: 600},
+                {n: "Play 5 Games", p: 450}, {n: "Check Website", p: 150},
+                {n: "Share on Twitter", p: 300}, {n: "Join Chat Group", p: 200},
+                {n: "Post on Status", p: 500}, {n: "Verify Email", p: 400},
+                {n: "Complete Profile", p: 350}, {n: "Invite Admin", p: 1000}
+            ];
+            
+            container.innerHTML = taskData.map(t => `
+                <div class="task-card">
+                    <div><strong>${t.n}</strong><br><small style="color:#94a3b8">+${t.p} PTS</small></div>
+                    <button class="task-btn" onclick="claimTask(${t.p})">Claim</button>
+                </div>
+            `).join('');
+        }
+
+        function claimTask(p) {
+            balance += p;
+            document.getElementById('score').innerText = balance + " PTS";
+            alert("Points Claimed Successfully!");
+        }
     </script>
 </body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethio-Job Global Bot</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        :root { --primary: #3b82f6; --bg: #0f172a; --card: #1e293b; }
-        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; text-align: center; }
-        #auth-page { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        input { width: 80%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: var(--card); color: white; }
-        .btn-main { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; width: 85%; font-weight: bold; cursor: pointer; }
-        .container { display: none; padding-bottom: 80px; }
-        .balance { font-size: 40px; color: #fbbf24; margin: 20px 0; font-weight: bold; }
-        .wheel-container { position: relative; width: 250px; height: 250px; margin: 20px auto; }
-        #wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid white; transition: transform 4s cubic-bezier(0.1, 0.7, 0.1, 1); background: conic-gradient(#3b82f6 0% 25%, #ef4444 25% 50%, #10b981 50% 75%, #f59e0b 75% 100%); }
-        .pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid white; z-index: 10; }
-        .menu-bar { position: fixed; bottom: 0; width: 100%; display: flex; background: var(--card); padding: 10px 0; border-top: 1px solid #334155; }
-        .menu-item { flex: 1; font-size: 12px; color: #94a3b8; }
-        .task-card { background: var(--card); margin: 8px; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
-    </style>
-</head>
-<body>
-
-    <div id="auth-page">
-        <h2>Ethio-Job Finder</h2>
-        <input type="text" id="contact" placeholder="Email or Phone...">
-        <button class="btn-main" onclick="sendOTP()">Send Code</button>
-        <div id="otp-section" style="display:none; width: 100%;">
-            <input type="text" id="otp-input" placeholder="Enter Code from Bot">
-            <button class="btn-main" onclick="verifyOTP()">Verify & Start</button>
-        </div>
-    </div>
-
-    <div class="container" id="main-app">
-        <div class="balance" id="points">0 PTS</div>
-        
-        <div id="game-tab">
-            <div class="wheel-container">
-                <div class="pointer"></div>
-                <div id="wheel"></div>
-            </div>
-            <button class="btn-main" id="spin-btn" onclick="startSpin()">SPIN NOW</button>
-            <p id="status-msg"></p>
-        </div>
-
-        <div id="task-tab" style="display:none; padding: 10px;">
-            <h4>Daily Tasks (15+)</h4>
-            <div class="task-card"><span>Follow TikTok</span><button onclick="addPts(100)">+100</button></div>
-            <div class="task-card"><span>Watch Video</span><button onclick="addPts(200)">+200</button></div>
-            <div class="task-card"><span>Contact Admin</span><button onclick="window.location.href='https://t.me/Leohaftu1'">Contact</button></div>
-            </div>
-
-        <div class="menu-bar">
-            <div class="menu-item" onclick="showTab('home')">🏠<br>Home</div>
-            <div class="menu-item" onclick="showTab('tasks')">📋<br>Tasks</div>
-            <div class="menu-item" onclick="showTab('withdraw')">💰<br>Withdraw</div>
-        </div>
-    </div>
-
-    <script>
-        let balance = 0; let rotation = 0; let correctOTP = "";
-        const tg = window.Telegram.WebApp; tg.expand();
-
-        function sendOTP() {
-            let val = document.getElementById('contact').value;
-            if(val.length > 5) {
-                // ቦቱ ኮድ እንዲልክ ትዕዛዝ ያስተላልፋል
-                tg.sendData(JSON.stringify({action: "get_code", user: val}));
-                document.getElementById('otp-section').style.display = 'block';
-                alert("ኮድ በቦቱ በኩል ተልኳል። ቴሌግራም ሜሴጅዎን ያዩ።");
-            }
-        }
-
-        // ቦቱ የላከውን ኮድ ለመቀበል (ቀላል እንዲሆንልህ ለጊዜው በ 1234 ሞክረው)
-        function verifyOTP() {
-            let input = document.getElementById('otp-input').value;
-            if(input === "1234") { 
-                document.getElementById('auth-page').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
-            } else { alert("ኮዱ ተሳስቷል! በድጋሚ ይሞክሩ።"); }
-        }
-
-        function startSpin() {
-            rotation += Math.floor(Math.random() * 360) + 1800;
-            document.getElementById('wheel').style.transform = `rotate(${rotation}deg)`;
-            setTimeout(() => {
-                let win = Math.floor(Math.random() * 500);
-                balance += win;
-                document.getElementById('points').innerText = balance + " PTS";
-                document.getElementById('status-msg').innerText = "You won " + win + " PTS!";
-            }, 4000);
-        }
-
-        function showTab(t) {
-            document.getElementById('game-tab').style.display = t === 'home' ? 'block' : 'none';
-            document.getElementById('task-tab').style.display = t === 'tasks' ? 'block' : 'none';
-        }
-        function addPts(p) { balance += p; document.getElementById('points').innerText = balance + " PTS"; }
-    </script>
-</body>
-</html>import telebot
-import json
-from telebot.types import WebAppInfo, InlineKeyboardMarkup, InlineKeyboardButton
-
-API_TOKEN = '8530857364:AAGKtW7Etj45QY7CNXoV3LxIv_SEWD_oNqE'
-bot = telebot.TeleBot(API_TOKEN)
-
-@bot.message_handler(commands=['start'])
-def start(message):
-    markup = InlineKeyboardMarkup()
-    # ማሳሰቢያ፡ እዚህ ጋር የአንተን የ GitHub Pages ሊንክ አስገባ
-    web_link = "https://leojobs2026.github.io/Ethio-job-app/" 
-    markup.add(InlineKeyboardButton("Open App 🚀", web_app=WebAppInfo(url=web_link)))
-    
-    bot.send_message(message.chat.id, "እንኳን ደህና መጡ! አፑን ለመክፈት ከታች ያለውን ይጫኑ።", reply_markup=markup)
-
-# አፑ ኮድ ሲጠይቅ ቦቱ እዚህ ጋር ይልካል
-@bot.message_handler(content_types=['web_app_data'])
-def handle_data(message):
-    data = json.loads(message.web_app_data.data)
-    if data.get('action') == "get_code":
-        # ለተጠቃሚው ማረጋገጫ ኮድ ይልካል
-        bot.send_message(message.chat.id, "የእርስዎ ማረጋገጫ ኮድ፡ 1234")
-
-bot.polling()
-
-
+</html>
