@@ -3,163 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethio-Job Global Bot</title>
+    <title>Ethio-Job Premium</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --primary: #3b82f6; --bg: #0f172a; --card: #1e293b; --accent: #fbbf24; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; text-align: center; overflow-x: hidden; }
-        
-        /* Login Section */
-        #auth-page { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        input { width: 85%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #334155; background: var(--card); color: white; font-size: 16px; }
-        
-        /* Main Container */
-        .container { display: none; padding-bottom: 90px; }
-        .header { padding: 25px; background: var(--card); border-bottom: 3px solid var(--primary); margin-bottom: 20px; }
-        .balance { font-size: 45px; font-weight: bold; color: var(--accent); text-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
-
-        /* Real Spinning Wheel */
-        .wheel-box { position: relative; width: 280px; height: 280px; margin: 20px auto; }
-        #wheel { width: 100%; height: 100%; border-radius: 50%; border: 8px solid #fff; transition: transform 4s cubic-bezier(0.1, 0.7, 0.1, 1); 
-                 background: conic-gradient(#3b82f6 0% 12.5%, #ef4444 12.5% 25%, #10b981 25% 37.5%, #f59e0b 37.5% 50%, #8b5cf6 50% 62.5%, #ec4899 62.5% 75%, #06b6d4 75% 87.5%, #f97316 87.5% 100%); }
-        .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 35px solid white; z-index: 10; }
-
-        /* Task Design */
-        .task-list { padding: 15px; text-align: left; }
-        .task-card { background: var(--card); margin-bottom: 12px; padding: 18px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
-        .btn-main { background: var(--primary); color: white; border: none; padding: 14px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 85%; font-size: 16px; transition: 0.3s; }
-        .btn-main:active { transform: scale(0.95); }
-        .task-btn { background: #3b82f6; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; }
-
-        /* Navigation Bar */
-        .menu-bar { position: fixed; bottom: 0; width: 100%; display: flex; background: var(--card); padding: 15px 0; border-top: 1px solid #334155; box-shadow: 0 -5px 20px rgba(0,0,0,0.5); }
-        .menu-item { flex: 1; font-size: 12px; color: #94a3b8; cursor: pointer; }
-        .menu-item.active { color: var(--primary); }
+        body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; margin: 0; }
+        .container { padding: 20px; }
+        #auth-page { padding: 50px 20px; }
+        input { width: 80%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; }
+        .btn { background: #3b82f6; color: white; border: none; padding: 12px 20px; border-radius: 8px; width: 85%; font-weight: bold; }
+        #wheel { width: 250px; height: 250px; border-radius: 50%; border: 5px solid white; transition: transform 4s cubic-bezier(0.1, 0.7, 0.1, 1); background: conic-gradient(#3b82f6 0 45deg, #ef4444 45deg 90deg, #10b981 90deg 135deg, #f59e0b 135deg 180deg, #3b82f6 180deg 225deg, #ef4444 225deg 270deg, #10b981 270deg 315deg, #f59e0b 315deg 360deg); margin: 20px auto; }
     </style>
 </head>
 <body>
-
     <div id="auth-page">
-        <h2 style="font-size: 28px;">Ethio-Job Premium</h2>
-        <p style="color: #94a3b8;">Enter Email or Phone to get code</p>
-        <input type="text" id="contact" placeholder="09... / Email">
-        <button class="btn-main" onclick="sendToBot()">Send Verification Code</button>
-        
-        <div id="otp-area" style="display:none; width: 100%; margin-top: 20px;">
-            <input type="text" id="otp-val" placeholder="Enter 4-digit code">
-            <button class="btn-main" style="background: #10b981;" onclick="checkCode()">Verify & Enter</button>
+        <h2>Ethio-Job Finder</h2>
+        <input type="text" id="contact" placeholder="Phone/Email">
+        <button class="btn" onclick="sendOTP()">Send Code</button>
+        <div id="otp-section" style="display:none;">
+            <input type="text" id="otp-val" placeholder="Enter Code">
+            <button class="btn" style="background:#10b981" onclick="verify()">Verify</button>
         </div>
-        <p style="margin-top: 20px; color: #64748b;">Support: @Leohaftu1</p>
     </div>
 
-    <div class="container" id="app-body">
-        <div class="header">
-            <div class="balance" id="score">0 PTS</div>
-            <p>Welcome to Global Tasks</p>
-        </div>
-
-        <div id="home-section">
-            <h3 style="color: var(--accent);">Luck Spin Wheel 🎡</h3>
-            <div class="wheel-box">
-                <div class="pointer"></div>
-                <div id="wheel"></div>
-            </div>
-            <button class="btn-main" id="spin-button" onclick="handleSpin()">SPIN NOW</button>
-            <p id="spin-msg" style="margin-top: 15px; font-weight: bold; height: 20px;"></p>
-        </div>
-
-        <div id="task-section" style="display:none;">
-            <h3 style="margin-left: 20px;">Available Tasks (15+)</h3>
-            <div class="task-list" id="task-container">
-                </div>
-        </div>
-
-        <div class="menu-bar">
-            <div class="menu-item active" onclick="switchTab('home')">🏠<br>Home</div>
-            <div class="menu-item" onclick="switchTab('tasks')">📋<br>Tasks</div>
-            <div class="menu-item" onclick="window.location.href='https://t.me/Leohaftu1'">👤<br>Admin</div>
-            <div class="menu-item" onclick="alert('Withdraw starts at 50,000 PTS')">💰<br>Withdraw</div>
-        </div>
+    <div id="main-app" style="display:none;">
+        <h1 id="pts">0 PTS</h1>
+        <div id="wheel"></div>
+        <button class="btn" onclick="spin()">SPIN NOW</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand();
-        let balance = 0;
-        let rotation = 0;
-
-        // 1. Send Data to Bot
-        function sendToBot() {
-            let input = document.getElementById('contact').value;
-            if(input.length > 5) {
-                tg.sendData("request_code:" + input);
-                document.getElementById('otp-area').style.display = 'block';
-                alert("ኮድ በቴሌግራም ቦቱ በኩል ተልኳል። ቦቱን ይዩ።");
-            } else { alert("Please enter valid info!"); }
+        let score = 0; let rot = 0;
+        function sendOTP() {
+            tg.sendData("get_code:" + document.getElementById('contact').value);
+            document.getElementById('otp-section').style.display = 'block';
+            alert("ኮድ በቦቱ በኩል ተልኳል!");
         }
-
-        // 2. Check Code (Correct code is 1234)
-        function checkCode() {
-            let code = document.getElementById('otp-val').value;
-            if(code === "1234") {
+        function verify() {
+            if(document.getElementById('otp-val').value === "1234") {
                 document.getElementById('auth-page').style.display = 'none';
-                document.getElementById('app-body').style.display = 'block';
-                loadTasks();
-            } else { alert("Wrong code! Use 1234"); }
+                document.getElementById('main-app').style.display = 'block';
+            } else { alert("ስህተት!"); }
         }
-
-        // 3. Real Spin Animation
-        function handleSpin() {
-            const wheel = document.getElementById('wheel');
-            const btn = document.getElementById('spin-button');
-            btn.disabled = true;
-            
-            let extra = Math.floor(Math.random() * 360) + 1800; // 5 full spins + random
-            rotation += extra;
-            wheel.style.transform = `rotate(${rotation}deg)`;
-
-            setTimeout(() => {
-                let win = Math.floor(Math.random() * 800) + 50;
-                balance += win;
-                document.getElementById('score').innerText = balance + " PTS";
-                document.getElementById('spin-msg').innerText = "🎉 You Won " + win + " PTS!";
-                btn.disabled = false;
+        function spin() {
+            rot += Math.floor(Math.random() * 360) + 1800;
+            document.getElementById('wheel').style.transform = `rotate(${rot}deg)`;
+            setTimeout(() => { 
+                score += Math.floor(Math.random() * 500);
+                document.getElementById('pts').innerText = score + " PTS";
             }, 4000);
-        }
-
-        // 4. Tab Switching
-        function switchTab(type) {
-            document.getElementById('home-section').style.display = (type === 'home') ? 'block' : 'none';
-            document.getElementById('task-section').style.display = (type === 'tasks') ? 'block' : 'none';
-            // Update active menu style
-        }
-
-        // 5. Loading 15+ Tasks
-        function loadTasks() {
-            const container = document.getElementById('task-container');
-            const taskData = [
-                {n: "Follow TikTok", p: 500}, {n: "Join V-Play Channel", p: 300},
-                {n: "Watch YouTube Video", p: 400}, {n: "Invite 5 Friends", p: 1000},
-                {n: "Daily Bonus", p: 100}, {n: "Follow Instagram", p: 250},
-                {n: "Like Facebook Page", p: 200}, {n: "Subscribe YouTube", p: 600},
-                {n: "Play 5 Games", p: 450}, {n: "Check Website", p: 150},
-                {n: "Share on Twitter", p: 300}, {n: "Join Chat Group", p: 200},
-                {n: "Post on Status", p: 500}, {n: "Verify Email", p: 400},
-                {n: "Complete Profile", p: 350}, {n: "Invite Admin", p: 1000}
-            ];
-            
-            container.innerHTML = taskData.map(t => `
-                <div class="task-card">
-                    <div><strong>${t.n}</strong><br><small style="color:#94a3b8">+${t.p} PTS</small></div>
-                    <button class="task-btn" onclick="claimTask(${t.p})">Claim</button>
-                </div>
-            `).join('');
-        }
-
-        function claimTask(p) {
-            balance += p;
-            document.getElementById('score').innerText = balance + " PTS";
-            alert("Points Claimed Successfully!");
         }
     </script>
 </body>
