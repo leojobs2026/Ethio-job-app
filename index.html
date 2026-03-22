@@ -3,70 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethio-Job Premium Bot</title>
+    <title>Ethio-Job Global</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; margin: 0; }
-        .header { padding: 20px; background: #1e293b; border-bottom: 2px solid #3b82f6; }
-        .balance { font-size: 32px; margin: 20px 0; color: #fbbf24; }
-        .menu-bar { position: fixed; bottom: 0; width: 100%; display: flex; background: #1e293b; padding: 10px 0; }
-        .menu-item { flex: 1; font-size: 12px; cursor: pointer; }
-        .task-card { background: #1e293b; margin: 10px; padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; }
-        .btn { background: #3b82f6; border: none; padding: 8px 15px; color: white; border-radius: 5px; }
-        .spin-section { margin: 30px 0; padding: 20px; background: linear-gradient(45deg, #1e293b, #334155); }
+        :root { --primary: #3b82f6; --bg: #0f172a; --card: #1e293b; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden; }
+        
+        /* Login Section */
+        #auth-page { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        input { width: 80%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: var(--card); color: white; border: 1px solid #334155; }
+        
+        /* Main UI */
+        .container { display: none; padding-bottom: 80px; }
+        .header { padding: 20px; text-align: center; background: var(--card); border-bottom: 3px solid var(--primary); }
+        .balance { font-size: 40px; font-weight: bold; color: #fbbf24; margin: 20px 0; }
+
+        /* Spinning Wheel Style */
+        .wheel-container { position: relative; width: 250px; height: 250px; margin: 20px auto; }
+        #wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #fff; transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); background: conic-gradient(#3b82f6 0deg 90deg, #ef4444 90deg 180deg, #10b981 180deg 270deg, #f59e0b 270deg 360deg); }
+        .pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid white; z-index: 10; }
+
+        /* Navigation */
+        .menu-bar { position: fixed; bottom: 0; width: 100%; display: flex; background: var(--card); padding: 15px 0; box-shadow: 0 -5px 15px rgba(0,0,0,0.3); }
+        .menu-item { flex: 1; text-align: center; font-size: 12px; cursor: pointer; color: #94a3b8; }
+        .menu-item.active { color: var(--primary); font-weight: bold; }
+
+        .btn-main { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 80%; }
+        .task-card { background: var(--card); margin: 10px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h3>Ethio-Job Global Bot</h3>
-        <p>Verified User: <span id="user-id">@User</span></p>
+
+    <div id="auth-page">
+        <h2>Welcome to Ethio-Job</h2>
+        <p>Enter Email or Phone to receive code</p>
+        <input type="text" id="contact" placeholder="Email or Phone number...">
+        <button class="btn-main" onclick="sendOTP()">Send Code</button>
+        <div id="otp-section" style="display:none; width: 100%; text-align: center;">
+            <input type="text" id="otp" placeholder="Enter 4-digit code">
+            <button class="btn-main" onclick="verifyOTP()">Verify & Start</button>
+        </div>
     </div>
 
-    <div class="balance" id="points">0.00 PTS</div>
-
-    <div class="spin-section">
-        <h4>Luck Spin Wheel 🎡</h4>
-        <button class="btn" onclick="spinGame()">SPIN NOW</button>
-        <p id="spin-result"></p>
-    </div>
-
-    <div id="task-container" style="padding-bottom: 80px;">
-        <h4>Available Tasks</h4>
-        <div class="task-card">
-            <span>Follow our TikTok</span>
-            <button class="btn" onclick="doTask(100)">+100 PTS</button>
-        </div>
-        <div class="task-card">
-            <span>Watch V-Play Intro</span>
-            <button class="btn" onclick="doTask(150)">+150 PTS</button>
-        </div>
-        <div class="task-card">
-            <span>Contact @Leohaftu1</span>
-            <button class="btn" onclick="window.location.href='https://t.me/Leohaftu1'">Contact</button>
-        </div>
+    <div class="container" id="main-app">
+        <div class="header">
+            <h3>Ethio-Job Global Bot</h3>
+            <div class="balance" id="points">0 PTS</div>
         </div>
 
-    <div class="menu-bar">
-        <div class="menu-item" onclick="showTab('home')">🏠<br>Home</div>
-        <div class="menu-item" onclick="showTab('tasks')">📋<br>Tasks</div>
-        <div class="menu-item" onclick="showTab('games')">🎮<br>Games</div>
-        <div class="menu-item" onclick="showTab('withdraw')">💰<br>Withdraw</div>
+        <div id="game-tab">
+            <h4>Luck Spin Wheel 🎡</h4>
+            <div class="wheel-container">
+                <div class="pointer"></div>
+                <div id="wheel"></div>
+            </div>
+            <button class="btn-main" id="spin-btn" onclick="startSpin()">SPIN NOW</button>
+            <p id="status-msg"></p>
+        </div>
+
+        <div id="task-tab" style="display:none;">
+            <h4>Available Tasks (15+)</h4>
+            <div class="task-card"><span>Follow TikTok</span><button onclick="addPoints(100)">+100</button></div>
+            <div class="task-card"><span>Watch V-Play</span><button onclick="addPoints(200)">+200</button></div>
+            <div class="task-card"><span>Join Channel</span><button onclick="addPoints(50)">+50</button></div>
+            <div class="task-card"><span>Contact @Leohaftu1</span><button onclick="window.location.href='https://t.me/Leohaftu1'">Contact</button></div>
+        </div>
+
+        <div class="menu-bar">
+            <div class="menu-item active" onclick="showTab('home')">🏠<br>Home</div>
+            <div class="menu-item" onclick="showTab('tasks')">📋<br>Tasks</div>
+            <div class="menu-item" onclick="showTab('games')">🎮<br>Games</div>
+            <div class="menu-item" onclick="showTab('withdraw')">💰<br>Withdraw</div>
+        </div>
     </div>
 
     <script>
-        let points = 0;
-        function doTask(amt) {
-            points += amt;
-            document.getElementById('points').innerText = points + ".00 PTS";
-            alert("Task Completed! Points Added.");
+        let balance = 0;
+        let rotation = 0;
+
+        // 1. Auth Logic
+        function sendOTP() {
+            if(document.getElementById('contact').value.length > 5) {
+                document.getElementById('otp-section').style.display = 'block';
+                alert("Code sent to your contact!");
+            }
+        }
+        function verifyOTP() {
+            if(document.getElementById('otp').value === "1234") { // ለሙከራ ኮዱ 1234 ነው
+                document.getElementById('auth-page').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
+            } else { alert("Wrong code! Try 1234"); }
         }
 
-        function spinGame() {
-            let win = Math.floor(Math.random() * 500);
-            points += win;
-            document.getElementById('points').innerText = points + ".00 PTS";
-            document.getElementById('spin-result').innerText = "You won " + win + " PTS!";
+        // 2. Spin Logic (Real Animation)
+        function startSpin() {
+            const wheel = document.getElementById('wheel');
+            const btn = document.getElementById('spin-btn');
+            btn.disabled = true;
+            
+            const extraDeg = Math.floor(Math.random() * 360) + 1440; // ቢያንስ 4 ዙር እንዲዞር
+            rotation += extraDeg;
+            wheel.style.transform = `rotate(${rotation}deg)`;
+
+            setTimeout(() => {
+                let win = Math.floor(Math.random() * 500) + 50;
+                balance += win;
+                document.getElementById('points').innerText = balance + " PTS";
+                document.getElementById('status-msg').innerText = "You won " + win + " PTS!";
+                btn.disabled = false;
+            }, 4000);
         }
+
+        // Tab Switching
+        function showTab(tab) {
+            document.getElementById('game-tab').style.display = (tab === 'home' || tab === 'games') ? 'block' : 'none';
+            document.getElementById('task-tab').style.display = (tab === 'tasks') ? 'block' : 'none';
+        }
+
+        function addPoints(pts) { balance += pts; document.getElementById('points').innerText = balance + " PTS"; alert("Points Added!"); }
     </script>
 </body>
 </html>
